@@ -25,12 +25,12 @@ class TestAuthBlueprint(BaseTestCase):
         Test can successfully get a grocery list.
         """
         with self.client:
-            data = self.client.get('/groceries',
-                                   data='',
-                                   content_type='application/json')
-            print('test_can_get_a_grocery_list:: \n', data)
+            response = self.client.get('/groceries',
+                                       data='',
+                                       content_type='application/json')
+            print('test_can_get_a_grocery_list:: \n', response.data.decode())
 
-            self.assertTrue(data)
+            self.assertTrue(response)
             # self.assertTrue(data['status'] == 'success')
             # self.assertTrue(data['message'] == 'Successfully registered.')
             # self.assertTrue(data['auth_token'])
