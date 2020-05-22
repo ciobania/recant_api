@@ -1,0 +1,55 @@
+swagger: "2.0"
+info:
+  title: RecAnt Server API
+  description: RecAnt Server API description in Markdown.
+  version: 0.0.1
+host: api.recant.com
+basePath: /v1
+schemes:
+  - https
+paths:
+  /auth/register:
+    post:
+      summary: User registration.
+      description: Optional extended description in Markdown.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+  /auth/login:
+    post:
+      summary: User login.
+      description: Optional extended description in Markdown.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+  /auth/status:
+    get:
+      summary: User auth status.
+      description: Get user auth status of token.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+  /auth/logout:
+    post:
+      summary: User logout.
+      description: Optional extended description in Markdown.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+  /groceries:
+    get:
+      summary: Returns a list of users.
+      description: Optional extended description in Markdown.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
