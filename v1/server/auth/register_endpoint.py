@@ -5,8 +5,8 @@
 from flask import request, jsonify, make_response
 from flask.views import MethodView
 
-from flask_jwt_auth.project.server import db_sql
-from flask_jwt_auth.project.server.models import User
+from flask_jwt_auth.v1.server import db_sql
+from flask_jwt_auth.v1.server.models import User
 
 
 class RegisterEndpoint(MethodView):

@@ -3,14 +3,11 @@
 # vim: set fileencoding=utf-8 :
 # author: 'ACIOBANI'
 
-import contextlib
-import json
 import unittest
-from sqlalchemy import MetaData
 
-from flask_jwt_auth.project.server import db_sql
-from flask_jwt_auth.project.server.models import User
-from flask_jwt_auth.project.tests.base import BaseTestCase
+from flask_jwt_auth.v1.server import db_sql
+from flask_jwt_auth.v1.server.models import User
+from flask_jwt_auth.v1.tests.base import BaseTestCase
 
 
 class TestUserModel(BaseTestCase):

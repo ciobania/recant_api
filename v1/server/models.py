@@ -8,7 +8,7 @@ import jwt
 from datetime import datetime, timedelta
 from uuid import NAMESPACE_DNS, uuid5
 
-from flask_jwt_auth.project.server import app, db_sql, bcrypt, db_mongo
+from flask_jwt_auth.v1.server import app, db_sql, bcrypt, db_mongo
 
 
 class User(db_sql.Model):

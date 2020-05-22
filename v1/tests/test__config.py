@@ -4,7 +4,7 @@ import unittest
 from flask import current_app
 from flask_testing import TestCase
 
-from flask_jwt_auth.project.server import app
+from flask_jwt_auth.v1.server import app
 
 
 DATABASE_URI = 'postgresql://es_user:es_password@192.168.1.133:54320/{}'
@@ -15,7 +15,7 @@ class TestDevelopmentConfig(TestCase):
     Test DevelopmentConfig works correctly.
     """
     def create_app(self):
-        app.config.from_object('project.server.config.DevelopmentConfig')
+        app.config.from_object('v1.server.config.DevelopmentConfig')
         return app
 
     def test_app_is_development(self):
@@ -33,7 +33,7 @@ class TestTestingConfig(TestCase):
     Test application TestingConfig works correctly.
     """
     def create_app(self):
-        app.config.from_object('project.server.config.TestingConfig')
+        app.config.from_object('v1.server.config.TestingConfig')
         return app
 
     def test_app_is_testing(self):
@@ -50,7 +50,7 @@ class TestProductionConfig(TestCase):
     Test application ProductionConfig works correctly.
     """
     def create_app(self):
-        app.config.from_object('project.server.config.ProductionConfig')
+        app.config.from_object('v1.server.config.ProductionConfig')
         return app
 
     def test_app_is_production(self):

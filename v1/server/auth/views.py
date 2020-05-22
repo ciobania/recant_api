@@ -5,10 +5,10 @@
 
 from flask import Blueprint
 
-from flask_jwt_auth.project.server.auth.login_endpoint import LoginEndpoint
-from flask_jwt_auth.project.server.auth.logout_endpoint import LogoutEndpoint
-from flask_jwt_auth.project.server.auth.register_endpoint import RegisterEndpoint
-from flask_jwt_auth.project.server.auth.user_auth_status_endpoint import UserAuthStatusEndpoint
+from flask_jwt_auth.v1.server.auth.login_endpoint import LoginEndpoint
+from flask_jwt_auth.v1.server.auth.logout_endpoint import LogoutEndpoint
+from flask_jwt_auth.v1.server.auth.register_endpoint import RegisterEndpoint
+from flask_jwt_auth.v1.server.auth.user_auth_status_endpoint import UserAuthStatusEndpoint
 
 auth_bp = Blueprint('auth', __name__)
 

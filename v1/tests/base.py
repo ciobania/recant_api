@@ -3,7 +3,7 @@
 
 from flask_testing import TestCase
 
-from flask_jwt_auth.project.server import app, db_sql
+from flask_jwt_auth.v1.server import app, db_sql
 
 
 class BaseTestCase(TestCase):
@@ -12,7 +12,7 @@ class BaseTestCase(TestCase):
     """
 
     def create_app(self):
-        app.config.from_object('project.server.config.TestingConfig')
+        app.config.from_object('v1.server.config.TestingConfig')
         return app
 
     def setUp(self):
