@@ -1,0 +1,18 @@
+https://stackoverflow.com/questions/42912755/how-to-create-a-db-for-mongodb-container-on-start-up
+https://stackoverflow.com/questions/21678740/cant-authenticate-with-mongoenine-to-mongodb-replicas
+https://stackoverflow.com/questions/36554545/flask-mongoengine-document-id
+https://turbogears.readthedocs.io/en/latest/cookbook/multiple-databases.html#update-your-model-s-init-to-handle-multiple-sessions-and-metadata
+https://www.tutorialspoint.com/mongodb/mongodb_create_database.htm
+
+
+https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-iv-database
+http://docs.mongoengine.org/projects/flask-mongoengine/en/latest/
+https://medium.com/@maison.moa/using-jwt-json-web-tokens-to-authorize-users-and-protect-api-routes-3e04a1453c3e
+https://medium.com/trabe/user-authentication-with-flask-jwt-be0e6f457dff
+
+https://flask.palletsprojects.com/en/1.1.x/patterns/apierrors/
+https://flask.palletsprojects.com/en/1.1.x/signals/
+https://damyanon.net/post/flask-series-configuration/
+
+# official mongo docs
+https://docs.mongodb.com/manual/reference/method/db.collection.find/
