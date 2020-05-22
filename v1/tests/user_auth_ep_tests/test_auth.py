@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # vim: set fileencoding=utf-8 :
 # author: 'ACIOBANI'
+import json
 import unittest
 from time import sleep
 
@@ -226,6 +227,22 @@ class TestAuthBlueprint(BaseTestCase):
             self.assertTrue(data['status'] == 'fail')
             self.assertTrue(data['message'] == 'Token is blacklisted. Please Log In again.')
             self.assertEqual(data['status_code'], 401)
+
+    def test_user_status_with_malformed_bearer_token(self):
+        """
+        Test for auth user status with malformed bearer token.
+        """
+        user_payload = {'email': 'malformed_bearer@mailinator.com',
+                        'password': '1234567890'}
+        with self.client:
+            data = self.auth.register_user(user_payload=user_payload)
+            headers = {'Authorization': 'Bearer' + data['auth_token']}
+            response = self.client.get('/auth/status',
+                                       headers=headers)
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'Bearer token malformed.')
+            self.assertEqual(response.status_code, 401)
 
 
 if __name__ == '__main__':
