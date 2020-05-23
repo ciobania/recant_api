@@ -179,7 +179,7 @@ class TestAuthBlueprint(BaseTestCase):
             data = self.auth.logout_user(auth_token=data['auth_token'])
             self.assertTrue(data['status'] == 'fail')
             self.assertTrue(data['message'] == 'Signature expired. Please Log In again.')
-            self.assertEqual(data['status_code'], 401)
+            self.assertEqual(data['status_code'], 400)
 
     def test_registered_user_cannot_logout_with_blacklisted_token(self):
         """
@@ -209,7 +209,7 @@ class TestAuthBlueprint(BaseTestCase):
             data = self.auth.logout_user(auth_token=data['auth_token'])
             self.assertTrue(data['status'] == 'fail')
             self.assertTrue(data['message'] == 'Token is blacklisted. Please Log In again.')
-            self.assertEqual(data['status_code'], 401)
+            self.assertEqual(data['status_code'], 400)
 
     def test_user_auth_status_with_a_valid_blacklisted_token(self):
         """
@@ -241,8 +241,8 @@ class TestAuthBlueprint(BaseTestCase):
                                        headers=headers)
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'fail')
-            self.assertTrue(data['message'] == 'Bearer token malformed.')
-            self.assertEqual(response.status_code, 401)
+            self.assertTrue(data['message'] == 'Bearer token is malformed.')
+            self.assertEqual(response.status_code, 400)
 
 
 if __name__ == '__main__':

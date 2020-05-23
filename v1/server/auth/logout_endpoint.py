@@ -34,7 +34,7 @@ class LogoutEndpoint(MethodView):
             else:
                 response_object = {'status': 'fail',
                                    'message': response}
-                return make_response(jsonify(response_object)), 401
+                return make_response(jsonify(response_object)), 400
         else:
             response_object = {'status': 'fail',
                                'message': 'Provide a valid auth token.'}

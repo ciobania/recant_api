@@ -23,8 +23,8 @@ class UserAuthStatusEndpoint(MethodView):
                 _, auth_token = auth_header.split()
             except ValueError as _:
                 response_object = {'status': 'fail',
-                                   'message': 'Bearer token malformed.'}
-                return make_response(jsonify(response_object)), 401
+                                   'message': 'Bearer token is malformed.'}
+                return make_response(jsonify(response_object)), 400
         else:
             auth_token = ''
         if auth_token:
@@ -36,11 +36,11 @@ class UserAuthStatusEndpoint(MethodView):
                                             'email': user.email,
                                             'admin': user.admin,
                                             'registered_on': user.registered_on}}
-                return make_response(jsonify(response_object))
+                return make_response(jsonify(response_object)), 200
             response_object = {'status': 'fail',
                                'message': response}
             return make_response(jsonify(response_object)), 401
         else:
             response_object = {'status': 'fail',
-                               'message': 'Provide a valid token.'}
-            return make_response(jsonify(response_object)), 401
+                               'message': 'Provide a valid auth token.'}
+            return make_response(jsonify(response_object)), 403
