@@ -15,8 +15,42 @@ paths:
       produces:
         - application/json
       responses:
-        200:
+        201:
           description: OK
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Successfully registered.
+              auth_token:
+                type: string
+                example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTAyMjM5NjMsImlhdCI6MTU5MDIyMzk1OCwic3ViIjozNDF9.80aFP4sQdJ_xBfpHERh7Ibn7rJKzLARmmakKPYtLv5A
+        401:
+          description: FAIL
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Some error occurred. Please try again later.
+        202:
+          description: FAIL
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: User already exists. Please Log In.
   /auth/login:
     post:
       summary: User login.
@@ -24,8 +58,104 @@ paths:
       produces:
         - application/json
       responses:
-        200:
+        201:
           description: OK
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Successfully logged in.
+              auth_token:
+                type: string
+                example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTAyMjM5NjMsImlhdCI6MTU5MDIyMzk1OCwic3ViIjozNDF9.80aFP4sQdJ_xBfpHERh7Ibn7rJKzLARmmakKPYtLv5A
+        400:
+          description: FAIL
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Incorrect password.
+        404:
+          description: FAIL
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: User does not exist.
+        500:
+          description: FAIL
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Try again.
+  /auth/logout:
+    post:
+      summary: User logout.
+      description: Optional extended description in Markdown.
+      produces:
+        - application/json
+      responses:
+        201:
+          description: User was successfully logged out.
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Successfully logged out.
+        401:
+          description: Token cannot be blacklisted.
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Custom error message when it fails to blacklist token.
+        400:
+          description: Token has expired
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Signature expired. Please Log In again.
+        403:
+          description: Token is not valid.
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Provide a valid auth token.
   /auth/status:
     get:
       summary: User auth status.
@@ -34,19 +164,55 @@ paths:
         - application/json
       responses:
         200:
-          description: OK
-  /auth/logout:
-    post:
-      summary: User logout.
-      description: Optional extended description in Markdown.
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
+          description: User auth status.
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              data:
+                type: object
+                example: {'admin': False,
+                          'email': 'token_sent@mailinator.com',
+                          'registered_on': 'Sat, 23 May 2020 10:18:29 GMT',
+                          'user_id': '03dd39cb-755e-5f5f-9324-7679134d6468'}
+        401:
+          description: Token cannot be blacklisted.
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Custom error message when it fails to blacklist token.
+        400:
+          description: Request Authorization Bearer is malformed.
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Bearer token is malformed.
+        403:
+          description: Token is not valid.
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Provide a valid auth token.
   /groceries:
     get:
-      summary: Returns a list of users.
+      summary: Returns a list of grocery lists.
       description: Optional extended description in Markdown.
       produces:
         - application/json
