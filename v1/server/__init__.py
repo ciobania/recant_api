@@ -6,7 +6,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_mongoengine import MongoEngine
 
 # from flask_jwt_auth.v1.server.__init_app import app
-from flask_jwt_auth.v1.server.app_modules.groceries_list_app.views import groceries_list_bp
 
 app = Flask(__name__)
 
@@ -19,6 +18,7 @@ db_mongo = MongoEngine(app)
 
 
 from flask_jwt_auth.v1.server.auth.views import auth_bp
+from flask_jwt_auth.v1.server.app_modules.groceries_list_app.views import groceries_list_bp
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(groceries_list_bp)
