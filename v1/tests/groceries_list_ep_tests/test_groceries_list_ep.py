@@ -3,11 +3,8 @@
 # vim: set fileencoding=utf-8 :
 # author: 'ACIOBANI'
 import json
-from uuid import UUID
+import unittest
 
-from flask import g
-
-from flask_jwt_auth.v1.server.models import User
 from flask_jwt_auth.v1.tests.base import BaseTestCase
 from flask_jwt_auth.v1.tests.user_auth_ep_tests.auth_helpers import AuthHelpers
 
@@ -42,12 +39,10 @@ class TestGroceriesBlueprint(BaseTestCase):
             self.assertTrue(data['content_type'] == 'application/json')
             self.assertEqual(data['status_code'], 200)
 
-            data = self.auth._request('/groceries', 'get', auth_token=data['auth_token'])
+            data = self.auth.rh.request('/groceries', 'get', auth_token=data['auth_token'])
             self.assertTrue(data['name'] == 'Grocery List 1')
             self.assertTrue(isinstance(data['id'], str))
             self.assertTrue(data['total_items'] == 10)
-            print('grocery_list_data', data, '\n')
-            print('g.user is::', g.user)
 
     def test_cannot_get_grocery_list_without_login(self):
         """
@@ -61,3 +56,7 @@ class TestGroceriesBlueprint(BaseTestCase):
             self.assertTrue(data['status'] == 'fail')
             self.assertTrue(data['message'] == 'Provide a valid auth token.')
             self.assertEqual(response.status_code, 403)
+
+
+if __name__ == '__main__':
+    unittest.main()
