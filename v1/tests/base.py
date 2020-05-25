@@ -12,7 +12,7 @@ class BaseTestCase(TestCase):
     """
 
     def create_app(self):
-        app.config.from_object('v1.server.config.TestingConfig')
+        app.config.from_object('flask_jwt_auth.v1.server.config.TestingConfig')
         return app
 
     def setUp(self):
