@@ -15,7 +15,7 @@ class RegisterEndpoint(MethodView):
     """
     def post(self):
         """
-        Scaffolding for POST HTTP method
+        Scaffolding for POST HTTP method: /auth/register
         :return: JSON API response
         """
         post_payload = request.get_json()

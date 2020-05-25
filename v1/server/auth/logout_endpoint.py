@@ -13,6 +13,10 @@ class LogoutEndpoint(MethodView):
     Logout API Endpoint.
     """
     def post(self):
+        """
+        Scaffolding for POST HTTP method: /auth/logout
+        :return: JSON API response
+        """
         auth_header = request.headers.get('Authorization')
         if auth_header:
             auth_token = auth_header.split(' ')[1]
