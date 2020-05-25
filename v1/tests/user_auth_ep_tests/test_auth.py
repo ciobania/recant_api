@@ -241,7 +241,7 @@ class TestAuthBlueprint(BaseTestCase):
                                        headers=headers)
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'fail')
-            self.assertTrue(data['message'] == 'Bearer token is malformed.')
+            self.assertTrue(data['message'] == 'Authorization Bearer token is missing or malformed.')
             self.assertEqual(response.status_code, 400)
 
 
