@@ -16,16 +16,30 @@ class RequestHelpers:
         response = None
         if 'auth_token' in kwargs:
             headers = {'Authorization': 'Bearer {}'.format(kwargs['auth_token'])}
-        elif 'user_payload' in kwargs:
-            data = json.dumps(kwargs['user_payload'])
-        if headers:
+        if 'payload' in kwargs:
+            data = json.dumps(kwargs['payload'])
+        if headers and data:
+            response = getattr(self.client, r_method)(url,
+                                                      headers=headers,
+                                                      data=data,
+                                                      content_type='application/json')
+        elif headers:
             response = getattr(self.client, r_method)(url, headers=headers)
-        if data:
+        elif data:
             response = getattr(self.client, r_method)(url, data=data, content_type='application/json')
 
         response_type = ("<class 'flask_testing.utils._make_test_response.<locals>.TestResponse'>", )
         if response and repr(type(response)) in response_type:
-            data = json.loads(response.data.decode())
+            data = {'status': 'success'}
+            try:
+                json_response = json.loads(response.data.decode())
+                if isinstance(json_response, (tuple, list)):
+                    data['data'] = json_response
+                else:
+                    data.update(json_response)
+            except json.decoder.JSONDecodeError as _:
+                data = {'status': 'fail', 'message': _}
+
             data['content_type'] = response.content_type
             data['status_code'] = response.status_code
 

@@ -11,7 +11,7 @@ from flask_jwt_auth.v1.server.models import User
 
 def login_required(method):
     @functools.wraps(method)
-    def wrapper(self):
+    def wrapper(self, *args, **kwargs):
         auth_header = request.headers.get('Authorization')
         if auth_header:
             try:
@@ -28,7 +28,7 @@ def login_required(method):
                 user = User.query.filter_by(id=response).first()
                 if user:
                     g.user = user
-                    return method(self)
+                    return method(self, *args, **kwargs)
                 else:
                     response_object = {'status': 'fail',
                                        'message': 'User not found.'}

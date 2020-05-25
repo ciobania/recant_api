@@ -13,12 +13,12 @@ class AuthHelpers:
         self.rh = RequestHelpers(self.client)
 
     def register_user(self, user_payload):
-        data = self.rh.request('/auth/register', 'post', user_payload=user_payload)
+        data = self.rh.request('/auth/register', 'post', payload=user_payload)
 
         return data
 
     def login_user(self, user_payload):
-        data = self.rh.request('/auth/login', 'post', user_payload=user_payload)
+        data = self.rh.request('/auth/login', 'post', payload=user_payload)
 
         return data
 
