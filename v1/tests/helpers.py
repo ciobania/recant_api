@@ -33,4 +33,3 @@ class RequestHelpers:
         else:
             err_msg = 'Response type is: {}.\nExpected type is {}.\n'
             raise NotImplementedError(err_msg.format(type(response), response_type))
-# git commit -m "Refactor and clean AuthHelpers, extract API requester into RequestHelpers." v1/tests/groceries_list_ep_tests/test_groceries_list_ep.py v1/tests/helpers.py v1/tests/user_auth_ep_tests/auth_helpers.py
