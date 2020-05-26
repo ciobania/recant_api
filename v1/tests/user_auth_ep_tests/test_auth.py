@@ -14,12 +14,18 @@ from flask_jwt_auth.v1.tests.user_auth_ep_tests.auth_helpers import AuthHelpers
 
 class TestAuthBlueprint(BaseTestCase):
     auth = None
+    session = None
+    meta = None
 
     def setUp(self):
         self.auth = AuthHelpers(self.client)
+        print('\nConnecting to DB:', db_sql.engine.url.database)
+        self.session = db_sql.session
+        self.meta = db_sql.metadata
+        clear_db_data(self.session, self.meta)
 
     def tearDown(self):
-        pass
+        clear_db_data(self.session, self.meta)
 
     def test_registration(self):
         """
@@ -243,6 +249,13 @@ class TestAuthBlueprint(BaseTestCase):
             self.assertTrue(data['status'] == 'fail')
             self.assertTrue(data['message'] == 'Authorization Bearer token is missing or malformed.')
             self.assertEqual(response.status_code, 400)
+
+
+def clear_db_data(session, meta):
+    for table in reversed(meta.sorted_tables):
+        print('Clear table %s' % table)
+        session.execute(table.delete())
+    session.commit()
 
 
 if __name__ == '__main__':
