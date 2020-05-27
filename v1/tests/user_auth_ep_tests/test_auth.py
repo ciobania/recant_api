@@ -8,7 +8,7 @@ from time import sleep
 
 from flask_jwt_auth.v1.server import db_sql
 from flask_jwt_auth.v1.server.models import User, BlacklistToken
-from flask_jwt_auth.v1.tests.base import BaseTestCase
+from flask_jwt_auth.v1.tests.base_test_case import BaseTestCase
 from flask_jwt_auth.v1.tests.user_auth_ep_tests.auth_helpers import AuthHelpers
 
 

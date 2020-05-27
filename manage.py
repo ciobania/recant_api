@@ -23,8 +23,8 @@ COV = coverage.coverage(
 COV.start()
 
 
-migrate = Migrate(app, db_sql)
 manager = Manager(app)
+migrate = Migrate(app, db_sql)
 
 # migrations
 manager.add_command('db', MigrateCommand)
@@ -63,6 +63,7 @@ def cov():
 def create_db():
     """Creates the db tables."""
     db_sql.create_all()
+    db_sql.session.commit()
 
 
 @manager.command

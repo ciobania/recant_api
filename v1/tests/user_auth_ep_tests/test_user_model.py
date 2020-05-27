@@ -7,7 +7,8 @@ import unittest
 
 from flask_jwt_auth.v1.server import db_sql
 from flask_jwt_auth.v1.server.models import User
-from flask_jwt_auth.v1.tests.base import BaseTestCase
+from flask_jwt_auth.v1.server.models.roles_model import Role
+from flask_jwt_auth.v1.tests.base_test_case import BaseTestCase
 
 
 class TestUserModel(BaseTestCase):
@@ -27,14 +28,19 @@ class TestUserModel(BaseTestCase):
         """
         Test can encode auth token.
         """
+        role = Role('admin')
         user = User(email='test@test.com',
-                    password='test')
+                    password='test',
+                    roles=[role])
 
         self.session.add(user)
         self.session.commit()
         auth_token = user.encode_auth_token(user_id=user.id)
-        self.assertTrue(isinstance(auth_token, bytes))
-        self.assertTrue(User.decode_auth_token(auth_token=auth_token.decode('utf-8')) == user.id)
+        self.assertTrue(isinstance(auth_token, bytes),
+                        msg='auth_token type is:: {} and value:: {}'.format(type(auth_token), auth_token))
+        decoded_auth_token = User.decode_auth_token(auth_token=auth_token.decode('utf-8'))
+        self.assertTrue(decoded_auth_token == user.id,
+                        msg='Received:: {} - {}'.format(type(decoded_auth_token), type(user.id)))
 
 
 def clear_db_data(session, meta):
