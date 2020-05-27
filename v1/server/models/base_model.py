@@ -26,6 +26,3 @@ class BaseModel(db_sql.Model):
     created_at._creation_order = 997
     updated_at._creation_order = 998
     deleted_at._creation_order = 999
-
-# need to ensure datetime is UTC on all fields
-# can I ues datetime.utcnow()?
