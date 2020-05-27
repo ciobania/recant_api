@@ -16,3 +16,22 @@ https://damyanon.net/post/flask-series-configuration/
 
 # official mongo docs
 https://docs.mongodb.com/manual/reference/method/db.collection.find/
+
+
+
+
+# flask and sqlalchemy debugging
+https://pythonhosted.org/Flask-Security/quickstart.html
+https://buildmedia.readthedocs.org/media/pdf/flask-diamond/master/flask-diamond.pdf
+https://docs.sqlalchemy.org/en/13/orm/basic_relationships.html
+https://flask.palletsprojects.com/en/1.1.x/views/
+https://damyanon.net/post/flask-series-configuration/
+https://flask.palletsprojects.com/en/1.1.x/patterns/apierrors/
+https://pythonise.com/series/learning-flask/flask-api-methodview
+https://stackoverflow.com/questions/22410071/flask-security-create-role-user-and-linking-user-id-to-role-id
+
+# mongodb docker compose example with remote DB
+https://fiware-tutorials.readthedocs.io/en/1.0.0/crud-operations/index.html#data-entities
+
+
+https://softwareengineering.stackexchange.com/questions/410482/how-do-i-prevent-scrum-from-turning-great-developers-into-average-developers
