@@ -26,3 +26,11 @@ class BaseModel(db_sql.Model):
     created_at._creation_order = 997
     updated_at._creation_order = 998
     deleted_at._creation_order = 999
+
+    def __init__(self, auto_save=True):
+        if auto_save:
+            self.save()
+
+    def save(self):
+        db_sql.session.add(self)
+        db_sql.session.commit()
