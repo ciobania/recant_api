@@ -16,13 +16,13 @@ class TestUserModel(BaseTestCase):
     meta = None
 
     def setUp(self):
+        super(TestUserModel, self).setUp()
         print('\nConnecting to DB:', db_sql.engine.url.database)
         self.session = db_sql.session
         self.meta = db_sql.metadata
-        clear_db_data(self.session, self.meta)
 
     def tearDown(self):
-        clear_db_data(self.session, self.meta)
+        super(TestUserModel, self).tearDown()
 
     def test_encode_auth_token(self):
         """
@@ -32,22 +32,13 @@ class TestUserModel(BaseTestCase):
         user = User(email='test@test.com',
                     password='test',
                     roles=[role])
-
-        self.session.add(user)
-        self.session.commit()
+        user.save()
         auth_token = user.encode_auth_token(user_id=user.id)
         self.assertTrue(isinstance(auth_token, bytes),
                         msg='auth_token type is:: {} and value:: {}'.format(type(auth_token), auth_token))
         decoded_auth_token = User.decode_auth_token(auth_token=auth_token.decode('utf-8'))
         self.assertTrue(decoded_auth_token == user.id,
                         msg='Received:: {} - {}'.format(type(decoded_auth_token), type(user.id)))
-
-
-def clear_db_data(session, meta):
-    for table in reversed(meta.sorted_tables):
-        print('Clear table %s' % table)
-        session.execute(table.delete())
-    session.commit()
 
 
 if __name__ == '__main__':
