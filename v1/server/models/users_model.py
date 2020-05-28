@@ -36,6 +36,8 @@ class User(BaseModel, UserMixin):
         self.roles = roles
         if username:
             self.username = username
+        if self.auto_save:
+            self.save()
 
     @staticmethod
     def encode_auth_token(user_id):

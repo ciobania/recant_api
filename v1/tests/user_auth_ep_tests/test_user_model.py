@@ -32,7 +32,6 @@ class TestUserModel(BaseTestCase):
         user = User(email='test@test.com',
                     password='test',
                     roles=[role])
-        user.save()
         auth_token = user.encode_auth_token(user_id=user.id)
         self.assertTrue(isinstance(auth_token, bytes),
                         msg='auth_token type is:: {} and value:: {}'.format(type(auth_token), auth_token))

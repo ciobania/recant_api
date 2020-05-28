@@ -28,8 +28,7 @@ class BaseModel(db_sql.Model):
     deleted_at._creation_order = 999
 
     def __init__(self, auto_save=True):
-        if auto_save:
-            self.save()
+        self.auto_save = auto_save
 
     def save(self):
         db_sql.session.add(self)
