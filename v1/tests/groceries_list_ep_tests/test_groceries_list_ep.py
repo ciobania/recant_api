@@ -8,7 +8,6 @@ from uuid import uuid5, NAMESPACE_DNS, UUID
 
 from flask import g
 
-from flask_jwt_auth.v1.server import db_sql
 from flask_jwt_auth.v1.tests.base_test_case import BaseTestCase
 from flask_jwt_auth.v1.tests.user_auth_ep_tests.auth_helpers import AuthHelpers
 
@@ -19,14 +18,11 @@ class TestGroceriesBlueprint(BaseTestCase):
     should_register_and_login = False
 
     def setUp(self):
+        super(TestGroceriesBlueprint, self).setUp()
         self.auth = AuthHelpers(self.client)
-        print('\nConnecting to DB:', db_sql.engine.url.database)
-        self.session = db_sql.session
-        self.meta = db_sql.metadata
-        clear_db_data(self.session, self.meta)
 
     def tearDown(self):
-        clear_db_data(self.session, self.meta)
+        super(TestGroceriesBlueprint, self).tearDown()
 
     def register_and_login(self, email):
         user_payload = {'email': '{}@mailinator.com'.format(email),
@@ -132,13 +128,6 @@ class TestGroceriesBlueprint(BaseTestCase):
                                         auth_token=self.user_data['auth_token'])
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['message'] == 'Grocery List with id: {} was deleted.'.format(list_uuid))
-
-
-def clear_db_data(session, meta):
-    for table in reversed(meta.sorted_tables):
-        print('Clear table %s' % table)
-        session.execute(table.delete())
-    session.commit()
 
 
 if __name__ == '__main__':
