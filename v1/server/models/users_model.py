@@ -13,25 +13,29 @@ from flask_jwt_auth.v1.server import app, db_sql, bcrypt, db_mongo
 from flask_jwt_auth.v1.server.models import BaseModel, user_roles
 
 
-class User(UserMixin, BaseModel):
+class User(BaseModel, UserMixin):
     """
     User Model for storing user related details.
     """
     __tablename__ = 'users'
 
     email = db_sql.Column(db_sql.String(255), unique=True, nullable=False)
+    username = db_sql.Column(db_sql.String(255), unique=True, nullable=True)
     password = db_sql.Column(db_sql.String(255), nullable=False)
     registered_on = db_sql.Column(db_sql.DateTime, nullable=False)
     admin = db_sql.Column(db_sql.Boolean, nullable=False, default=False)
     roles = db_sql.relationship('Role', secondary=user_roles,
                                 backref=db_sql.backref('users', lazy='joined'))
 
-    def __init__(self, email, password, is_admin=False, roles=('admin',)):
+    def __init__(self, email, password, username=None, is_admin=False, roles=('admin',)):
+        super().__init__()
         self.email = email
         self.password = bcrypt.generate_password_hash(password, app.config.get('BCRYPT_LOG_ROUNDS')).decode()
         self.registered_on = datetime.now()
         self.is_admin = is_admin
         self.roles = roles
+        if username:
+            self.username = username
 
     @staticmethod
     def encode_auth_token(user_id):
