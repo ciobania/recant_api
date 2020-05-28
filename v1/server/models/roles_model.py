@@ -23,6 +23,9 @@ class Role(BaseModel, RoleMixin):
     __tablename__ = 'roles'
 
     name = db_sql.Column(db_sql.String(64), unique=True, nullable=False)
+    description = db_sql.Column(db_sql.String(255), unique=False, nullable=True)
 
-    def __init__(self, name):
+    def __init__(self, name, description=''):
+        super().__init__()
         self.name = name
+        self.description = description
