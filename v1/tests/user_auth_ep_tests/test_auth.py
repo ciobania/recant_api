@@ -6,8 +6,7 @@ import json
 import unittest
 from time import sleep
 
-from flask_jwt_auth.v1.server import db_sql
-from flask_jwt_auth.v1.server.models import User, BlacklistToken
+from flask_jwt_auth.v1.server.models import User, BlacklistToken, Role
 from flask_jwt_auth.v1.tests.base_test_case import BaseTestCase
 from flask_jwt_auth.v1.tests.user_auth_ep_tests.auth_helpers import AuthHelpers
 
@@ -45,9 +44,7 @@ class TestAuthBlueprint(BaseTestCase):
         """
         user_payload = {'email': 'joe@mailinator.com',
                         'password': '1234567890'}
-        user = User(**user_payload)
-        db_sql.session.add(user)
-        db_sql.session.commit()
+        user = User(**user_payload, roles=[Role('normal_user')])
         with self.client:
             data = self.auth.register_user(user_payload=user_payload)
             self.assertTrue(data['status'] == 'fail')

@@ -16,12 +16,13 @@ class BaseTestCase(TestCase):
         return app
 
     def setUp(self):
-        formatter = '\t|{:<32}|{:<15}|{:<5}|'
-        print('\nConnecting to:: ')
-        print(formatter.format('db_name', 'host', 'port'), sep='\t\t\t')
-        print(formatter.format(db_sql.engine.url.database,
-                               db_sql.engine.url.host,
-                               db_sql.engine.url.port), sep='\t\t')
+        if app.config.get('DEBUG') and app.config.get('TESTING'):
+            formatter = '\t|{:<32}|{:<15}|{:<5}|'
+            print('\nConnecting to:: ')
+            print(formatter.format('db_name', 'host', 'port'), sep='\t\t\t')
+            print(formatter.format(db_sql.engine.url.database,
+                                   db_sql.engine.url.host,
+                                   db_sql.engine.url.port), sep='\t\t')
 
         db_sql.create_all()
         db_sql.session.commit()
