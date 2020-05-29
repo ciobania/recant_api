@@ -5,8 +5,7 @@
 from flask import request, jsonify, make_response
 from flask.views import MethodView
 
-from flask_jwt_auth.v1.server import db_sql
-from flask_jwt_auth.v1.server.models import User
+from flask_jwt_auth.v1.server.models import User, Role
 
 
 class RegisterEndpoint(MethodView):
@@ -24,17 +23,17 @@ class RegisterEndpoint(MethodView):
         user = User.query.filter_by(email=email).first()
         if not user:
             try:
-                user = User(email=email, password=password)
-                db_sql.session.add(user)
-                db_sql.session.commit()
+                role = Role('normal_user')
+                user = User(email=email, password=password, roles=[role])
                 auth_token = user.encode_auth_token(user_id=user.id)
                 response_object = {'status': 'success',
                                    'message': 'Successfully registered.',
                                    'auth_token': auth_token.decode()}
                 return make_response(jsonify(response_object)), 201
             except Exception as _:
+                err_msg = 'Error occurred: {}. Please try again later.'
                 response_object = {'status': 'fail',
-                                   'message': 'Some error occurred. Please try again later.'}
+                                   'message': err_msg.format(_)}
                 return make_response(jsonify(response_object)), 401
         else:
             response_object = {'status': 'fail',
