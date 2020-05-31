@@ -33,6 +33,9 @@ class User(BaseModel, UserMixin):
         self.password = bcrypt.generate_password_hash(password, app.config.get('BCRYPT_LOG_ROUNDS')).decode()
         self.registered_on = datetime.now()
         self.is_admin = is_admin
+        # TODO: should I add a try/except for TypeError: Incompatible collection type: tuple is not list-like?
+        # TODO: should I make changes into API endpoint to guard against parameter validation
+        # TODO: should I guard against above error inside the Model and back-propagate the error?
         self.roles = roles
         if username:
             self.username = username
