@@ -35,3 +35,11 @@ https://fiware-tutorials.readthedocs.io/en/1.0.0/crud-operations/index.html#data
 
 
 https://softwareengineering.stackexchange.com/questions/410482/how-do-i-prevent-scrum-from-turning-great-developers-into-average-developers
+
+# sqlalchemy association tables
+https://stackoverflow.com/questions/5033547/sqlalchemy-cascade-delete
+https://www.pythoncentral.io/sqlalchemy-association-tables/
+https://www.rithmschool.com/courses/intermediate-flask/many-to-many-and-complex-associations
+
+# multiple databases with sqlalchemy flask
+https://www.youtube.com/watch?v=SB5BfYYpXjE
