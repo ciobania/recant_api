@@ -4,6 +4,7 @@
 # author: 'ACIOBANI'
 from flask import request, jsonify, make_response
 from flask.views import MethodView
+from psycopg2.errors import UniqueViolation
 
 from flask_jwt_auth.v1.server.models import User, Role
 
@@ -23,7 +24,11 @@ class RegisterEndpoint(MethodView):
         user = User.query.filter_by(email=email).first()
         if not user:
             try:
-                role = Role('normal_user')
+                role_name = 'normal_user'
+                role = Role.query.filter_by(name=role_name).first()
+                if not role:
+                    role = Role(role_name)
+
                 user = User(email=email, password=password, roles=[role])
                 auth_token = user.encode_auth_token(user_id=user.id)
                 response_object = {'status': 'success',
