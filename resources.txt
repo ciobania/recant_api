@@ -43,3 +43,6 @@ https://www.rithmschool.com/courses/intermediate-flask/many-to-many-and-complex-
 
 # multiple databases with sqlalchemy flask
 https://www.youtube.com/watch?v=SB5BfYYpXjE
+
+# dockerized ecosystem
+https://testdriven.io/blog/dockerizing-flask-with-postgres-gunicorn-and-nginx/

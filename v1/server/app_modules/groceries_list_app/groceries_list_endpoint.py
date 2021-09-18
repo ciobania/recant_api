@@ -39,7 +39,7 @@ class GroceriesListEndpoint(MethodView):
     @login_required
     def post(self, grocery_list_id):
         """
-        Scaffolding for GET HTTP request: /groceries/<name>
+        Scaffolding for POST HTTP request: /groceries/<uuid:grocery_list_id>
         :return: JSON API response
         """
         request_payload = request.get_json()
@@ -83,5 +83,6 @@ class GroceriesListEndpoint(MethodView):
                                    'message': 'Resource not found.'}
                 return make_response(jsonify(response_object)), 404
             else:
-                grocery_list.delete(synchronize_session=False)
+                grocery_list.delete(synchronize_session='fetch')
+                grocery_list.session.commit()
             return make_response(jsonify(response_object))

@@ -33,3 +33,7 @@ class BaseModel(db_sql.Model):
     def save(self):
         db_sql.session.add(self)
         db_sql.session.commit()
+
+    def delete(self):
+        db_sql.session.delete(self)
+        db_sql.session.commit()

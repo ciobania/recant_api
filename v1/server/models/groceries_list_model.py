@@ -66,3 +66,39 @@ class GroceriesList(BaseModel):
         response_object['total_items'] = 0
 
         return response_object
+
+
+class GroceriesListItem(BaseModel):
+    """
+    Groceries List Item Model for storing shopping groceries list items.
+    """
+    __tablename__ = 'groceries_list_item'
+    FK_USERS = db_sql.ForeignKey('users.id')
+    FK_GROCERIES_LIST = db_sql.ForeignKey('groceries_list.id')
+
+    name = db_sql.Column(db_sql.String(255), unique=True, nullable=False)
+    description = db_sql.Column(db_sql.String(255), unique=False, nullable=True)
+
+    user_id = db_sql.Column(FK_USERS, default=uuid4, nullable=False, unique=False,
+                            primary_key=False)
+    grocery_list_id = db_sql.Column(FK_GROCERIES_LIST, default=uuid4, nullable=False,
+                                    unique=False, primary_key=False)
+
+    def __init__(self, name, description, grocery_list_id, user):
+        super().__init__()
+        self.name = name
+        self.description = description
+        self.grocery_list_id = grocery_list_id
+        self.user_id = user.id
+        self.created_by = user.id
+        self.quantity = 0
+
+        if self.auto_save:
+            self.save()
+
+    def as_dict(self):
+        response_object = {column.name: getattr(self, column.name) for column in self.__table__.columns}
+        if hasattr(self, 'created_by'):
+            response_object['created_by'] = str(self.created_by)
+
+        return response_object

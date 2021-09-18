@@ -4,7 +4,6 @@
 # author: 'ACIOBANI'
 from flask import request, jsonify, make_response
 from flask.views import MethodView
-from psycopg2.errors import UniqueViolation
 
 from flask_jwt_auth.v1.server.models import User, Role
 
@@ -33,7 +32,7 @@ class RegisterEndpoint(MethodView):
                 auth_token = user.encode_auth_token(user_id=user.id)
                 response_object = {'status': 'success',
                                    'message': 'Successfully registered.',
-                                   'auth_token': auth_token.decode()}
+                                   'auth_token': auth_token}
                 return make_response(jsonify(response_object)), 201
             except Exception as _:
                 err_msg = 'Error occurred: {}. Please try again later.'

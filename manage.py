@@ -4,9 +4,10 @@
 import os
 import unittest
 import coverage
+import click
 
-from flask_script import Manager
-from flask_migrate import Migrate, MigrateCommand
+from flask.cli import FlaskGroup
+from flask_migrate import Migrate
 
 from flask_jwt_auth.v1.server import app, db_sql, models
 
@@ -23,14 +24,13 @@ COV = coverage.coverage(
 COV.start()
 
 
-manager = Manager(app)
 migrate = Migrate(app, db_sql)
-
+cli = FlaskGroup(app)
 # migrations
-manager.add_command('db', MigrateCommand)
+# manager.add_command('db', MigrateCommand)
 
 
-@manager.command
+@cli.command('test')
 def test():
     """Runs the unit tests without test coverage."""
     tests = unittest.TestLoader().discover('v1/tests', pattern='test*.py')
@@ -40,7 +40,7 @@ def test():
     return 1
 
 
-@manager.command
+@cli.command('cov')
 def cov():
     """Runs the unit tests with coverage."""
     tests = unittest.TestLoader().discover('v1/tests')
@@ -59,18 +59,18 @@ def cov():
     return 1
 
 
-@manager.command
+@cli.command('create_db')
 def create_db():
     """Creates the db tables."""
     db_sql.create_all()
     db_sql.session.commit()
 
 
-@manager.command
+@cli.command('drop_db')
 def drop_db():
     """Drops the db tables."""
     db_sql.drop_all()
 
 
 if __name__ == '__main__':
-    manager.run()
+    cli()

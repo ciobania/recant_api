@@ -68,7 +68,7 @@ $ python manage.py cov
 ```
 
 ## Remaining tasks:
-* finish tutorial
+* finish tutorial???
 * how to check tokens on other api endpoints, whilst verification is done on user model?
 * invalidate token after 1h?
 * customize token expiration period? - no more than 6 hours or 1 hours?
@@ -79,3 +79,13 @@ $ python manage.py cov
 * create SQL DBs for dev, test and prod when creating docker container in docker-compose?
 * create mongo collection when creating docker container in docker-compose?
 * when recreating the DBs, postgres, we need to run db init, create_db, db migrate, db upgrade, for each environment: dev, test, prod
+
+* crud sql for adding grocery items to grocery list - remaining: get and update
+* testing for crud sql from above
+* embed mongo eventstore into API: API -> pika publisher add to queue RabbitmQ
+* create consumer from mongo eventstore into psql: pika consumer from queue RabbitMQ -> PSQL
+  
+* refactor views and logging for API
+* refactor API errors: 404, 405, 401, 500
+* refactor tests
+* create docker from flask app and move it into amiba - mvp

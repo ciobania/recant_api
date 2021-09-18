@@ -5,7 +5,6 @@
 from flask import request, jsonify, make_response
 from flask.views import MethodView
 
-from flask_jwt_auth.v1.server import bcrypt
 from flask_jwt_auth.v1.server.models import User
 
 
@@ -19,16 +18,19 @@ class LoginEndpoint(MethodView):
         :return: JSON API response
         """
         post_payload = request.get_json()
+        print(f'post_payload is:: {post_payload}')
         try:
             user = User.query.filter_by(email=post_payload.get('email')).first()
-            if user and bcrypt.check_password_hash(user.password, post_payload.get('password')):
+            # password_is_a_match = user.check_password_hash(post_payload.get('password'))
+            password_is_a_match = post_payload.get('password') == user.password
+            if user and password_is_a_match:
                 auth_token = user.encode_auth_token(user_id=user.id)
                 if auth_token:
                     response_object = {'status': 'success',
                                        'message': 'Successfully logged in.',
-                                       'auth_token': auth_token.decode()}
+                                       'auth_token': auth_token}
                     return make_response(jsonify(response_object)), 200
-            elif user and not bcrypt.check_password_hash(user.password, post_payload.get('password')):
+            elif user and not password_is_a_match:
                 response_object = {'status': 'fail',
                                    'message': 'Incorrect password.'}
                 return make_response(jsonify(response_object)), 400
@@ -38,5 +40,5 @@ class LoginEndpoint(MethodView):
                 return make_response(jsonify(response_object)), 404
         except Exception as _:
             response_object = {'status': 'fail',
-                               'message': 'Try again.'}
+                               'message': f'{_}'}
             return make_response(jsonify(response_object)), 500

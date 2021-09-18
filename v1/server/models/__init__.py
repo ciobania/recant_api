@@ -7,3 +7,4 @@ from .base_model import BaseModel
 from .roles_model import user_roles, Role
 from .users_model import User, BlacklistToken
 from .groceries_list_model import GroceriesList
+from .groceries_list_model import GroceriesListItem

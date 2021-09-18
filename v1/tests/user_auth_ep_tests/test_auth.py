@@ -44,7 +44,7 @@ class TestAuthBlueprint(BaseTestCase):
         """
         user_payload = {'email': 'joe@mailinator.com',
                         'password': '1234567890'}
-        user = User(**user_payload, roles=[Role('normal_user')])
+        User(**user_payload, roles=[Role('normal_user')])
         with self.client:
             data = self.auth.register_user(user_payload=user_payload)
             self.assertTrue(data['status'] == 'fail')
@@ -57,18 +57,18 @@ class TestAuthBlueprint(BaseTestCase):
         """
         Test registered-user can login.
         """
-        user_payload = {'email': 'some_email@mailinator.com',
+        user_payload = {'email': 'aciokkan@gmail.com',
                         'password': '1234567890'}
         with self.client:
             data = self.auth.register_user(user_payload=user_payload)
-            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['status'] == 'success', data)
             self.assertTrue(data['message'] == 'Successfully registered.')
             self.assertTrue(data['auth_token'])
             self.assertTrue(data['content_type'] == 'application/json')
             self.assertEqual(data['status_code'], 201)
 
             data = self.auth.login_user(user_payload)
-            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['status'] == 'success', data)
             self.assertTrue(data['message'] == 'Successfully logged in.')
             self.assertTrue(data['auth_token'])
             self.assertTrue(data['content_type'] == 'application/json')

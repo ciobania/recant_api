@@ -3,13 +3,15 @@
 # vim: set fileencoding=utf-8 :
 # author: 'ACIOBANI'
 
-import base64
+from base64 import b64encode
+from hashlib import md5
+
 import jwt
 from datetime import datetime, timedelta
 from flask_security import UserMixin
 from uuid import NAMESPACE_DNS, uuid5, UUID
 
-from flask_jwt_auth.v1.server import app, db_sql, bcrypt, db_mongo
+from flask_jwt_auth.v1.server import app, db_sql, db_mongo
 from flask_jwt_auth.v1.server.models import BaseModel, user_roles
 
 
@@ -26,11 +28,13 @@ class User(BaseModel, UserMixin):
     admin = db_sql.Column(db_sql.Boolean, nullable=False, default=False)
     roles = db_sql.relationship('Role', secondary=user_roles,
                                 backref=db_sql.backref('users', lazy='joined'))
+    SALT = app.config.get('SECRET_KEY').encode()
 
     def __init__(self, email, password, username=None, is_admin=False, roles=('admin',)):
         super().__init__()
         self.email = email
-        self.password = bcrypt.generate_password_hash(password, app.config.get('BCRYPT_LOG_ROUNDS')).decode()
+        self.password = password  # self.generate_password_hash(password)
+        print(f'User password is:: {self.password}\nReceived password is:: {password}')
         self.registered_on = datetime.now()
         self.is_admin = is_admin
         # TODO: should I add a try/except for TypeError: Incompatible collection type: tuple is not list-like?
@@ -41,6 +45,12 @@ class User(BaseModel, UserMixin):
             self.username = username
         if self.auto_save:
             self.save()
+
+    def generate_password_hash(self, password):
+        return self._gen_password_hash(password)
+
+    def check_password_hash(self, password):
+        return self.password == self._gen_password_hash(password)
 
     @staticmethod
     def encode_auth_token(user_id):
@@ -85,6 +95,8 @@ class User(BaseModel, UserMixin):
 
         return err_msg
 
+    def _gen_password_hash(self, password):
+        return md5(b64encode(password.encode())).hexdigest()
 
 class Base(db_mongo.Document):
     meta = {'db_alias': 'tokens',
@@ -118,7 +130,7 @@ class BlacklistToken(db_mongo.Document):
     @staticmethod
     def _encode_data(data):
         data_to_encode = '.'.join(data).encode("utf-8")
-        encoded_bytes = base64.b64encode(data_to_encode)
+        encoded_bytes = b64encode(data_to_encode)
         encoded_str = str(encoded_bytes, "utf-8")
 
         return encoded_str

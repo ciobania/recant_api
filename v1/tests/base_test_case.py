@@ -12,7 +12,8 @@ class BaseTestCase(TestCase):
     """
 
     def create_app(self):
-        app.config.from_object('flask_jwt_auth.v1.server.config.TestingConfig')
+        app_cfg_obj = 'flask_jwt_auth.v1.server.config.TestingConfig'
+        app.config.from_object(app_cfg_obj)
         return app
 
     def setUp(self):
@@ -31,3 +32,4 @@ class BaseTestCase(TestCase):
         db_sql.session.remove()
         db_sql.drop_all()
         db_sql.session.commit()
+        # pass

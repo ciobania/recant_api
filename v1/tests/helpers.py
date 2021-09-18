@@ -26,9 +26,12 @@ class RequestHelpers:
         elif headers:
             response = getattr(self.client, r_method)(url, headers=headers)
         elif data:
-            response = getattr(self.client, r_method)(url, data=data, content_type='application/json')
+            response = getattr(self.client, r_method)(url,
+                                                      data=data,
+                                                      content_type='application/json')
 
         response_type = ("<class 'flask_testing.utils._make_test_response.<locals>.TestResponse'>", )
+        response_type = ("<class 'werkzeug.test.WrapperTestResponse'>", )
         if response and repr(type(response)) in response_type:
             data = {'status': 'success'}
             try:
@@ -38,7 +41,7 @@ class RequestHelpers:
                 else:
                     data.update(json_response)
             except json.decoder.JSONDecodeError as _:
-                data = {'status': 'fail', 'message': _}
+                data = {'status': 'fail', 'message': _, 'text': response.data}
 
             data['content_type'] = response.content_type
             data['status_code'] = response.status_code

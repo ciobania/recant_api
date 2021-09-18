@@ -22,6 +22,7 @@ class TestGroceriesBlueprint(BaseTestCase):
         self.auth = AuthHelpers(self.client)
         self.gh = GroceriesHelpers(self.client)
         self.gls = []
+        print('self.app.config::', self.app.config)
 
     def tearDown(self):
         super(TestGroceriesBlueprint, self).tearDown()
@@ -39,7 +40,7 @@ class TestGroceriesBlueprint(BaseTestCase):
                         'password': '1234567890'}
         with self.client:
             registered_data = self.auth.register_user(user_payload=user_payload)
-            # print('registered_data::', registered_data)
+            print('registered_data::', registered_data)
             self.assertTrue(registered_data['status'] == 'success', msg=f'Status is: {registered_data["status"]}')
             self.assertTrue(registered_data['message'] == 'Successfully registered.')
             self.assertTrue(registered_data['auth_token'])
@@ -52,7 +53,7 @@ class TestGroceriesBlueprint(BaseTestCase):
             self.assertTrue(login_data['auth_token'])
             self.assertTrue(login_data['content_type'] == 'application/json')
             self.assertEqual(login_data['status_code'], 200)
-            
+
             response_object = {'auth_token': login_data['auth_token'],
                                'user_data': User.query.filter_by(email=user_payload['email']).first()}
             return response_object
@@ -257,6 +258,45 @@ class TestGroceriesBlueprint(BaseTestCase):
             self.assertTrue(req_response['status'] == 'success')
             self.assertTrue(req_response['data'] == [])
             self.assertEqual(req_response['status_code'], 200)
+
+    def test_can_add_item_to_grocery_list(self):
+        """
+        Test that can add item to a grocery list.
+        """
+        grocery_list_payload = {'name': 'Grocery List With Item',
+                                'description': 'Item in List of 2020'}
+        user_auth = self.register_and_login(email='grocery_add_item_to_list_user')
+        with self.client:
+            data = self.gh.create_grocery_list(auth_token=user_auth['auth_token'],
+                                               payload=grocery_list_payload)
+            item_payload = {'name': 'New Item',
+                            'description': 'New Item Description'}
+            item_added_response = self.gh.add_item_to_list(auth_token=user_auth['auth_token'],
+                                                           gls_id=data['data']['id'],
+                                                           payload=item_payload)
+            self.assertTrue(item_added_response['status'] == 'success')
+
+    def test_can_delete_a_grocery_list_item(self):
+        """
+        Test that can delete a grocery list item.
+        """
+        user_auth = self.register_and_login(email='grocery_delete_list_item_user')
+        self.add_groceries_lists(user_data=user_auth['user_data'])
+        with self.client:
+            gls_id = self.gls[3].id
+            item_payload = {'name': 'New Item To Delete',
+                            'description': 'New Item To Delete Description'}
+            item_added_response = self.gh.add_item_to_list(auth_token=user_auth['auth_token'],
+                                                           gls_id=gls_id,
+                                                           payload=item_payload)
+            self.assertTrue(item_added_response['status'] == 'success')
+            delete_payload = {'item_id': item_added_response['data']['id']}
+            item_deleted_response = self.gh.delete_item_from_grocery_list(auth_token=user_auth['auth_token'],
+                                                                          gls_id=gls_id,
+                                                                          payload=delete_payload)
+            assert_msg = 'Grocery List Item with id: {} was deleted.'
+            self.assertTrue(item_deleted_response['message'] == assert_msg.format(delete_payload['item_id']),
+                            msg=item_deleted_response['message'])
 
 
 if __name__ == '__main__':

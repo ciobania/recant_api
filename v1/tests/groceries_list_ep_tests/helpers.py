@@ -55,3 +55,18 @@ class GroceriesHelpers:
                                auth_token=auth_token)
 
         return data
+
+    def add_item_to_list(self, auth_token, gls_id, payload):
+        data = self.rh.request('/api/groceries/{}/item'.format(gls_id),
+                               'post',
+                               auth_token=auth_token,
+                               payload=payload)
+
+        return data
+
+    def delete_item_from_grocery_list(self, auth_token, gls_id, payload):
+        data = self.rh.request('/api/groceries/{}/item/{}'.format(gls_id, payload['item_id']),
+                               'delete',
+                               auth_token=auth_token,
+                               payload=payload)
+        return data
