@@ -1,8 +1,9 @@
 # project/server/config.py
+from dotenv import load_dotenv
 
 import os
-HOST_IP = '192.168.1.137'
-# HOST_IP = '192.168.1.133'
+load_dotenv()
+HOST_IP = os.getenv('HOST_IP')
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 POSTGRES_LOCAL_BASE = 'postgresql://es_user:es_password@{}:54320/'.format(HOST_IP)
 
