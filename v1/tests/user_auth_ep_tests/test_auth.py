@@ -105,9 +105,12 @@ class TestAuthBlueprint(BaseTestCase):
                         'password': 'non_essential_password'}
         with self.client:
             data = self.auth.login_user(user_payload)
+            err_msg = f"Failed to not allow login: \n Received data is: {data}"
 
-            self.assertTrue(data['status'] == 'fail')
-            self.assertTrue(data['message'] == 'User does not exist.')
+            self.assertTrue(data['status'] == 'fail',
+                            msg=err_msg)
+            self.assertTrue(data['message'] == 'User does not exist.',
+                            msg=err_msg)
             self.assertTrue(data['content_type'] == 'application/json')
             self.assertEqual(data['status_code'], 404)
 
@@ -120,8 +123,9 @@ class TestAuthBlueprint(BaseTestCase):
         with self.client:
             data = self.auth.register_user(user_payload=user_payload)
             data = self.auth.auth_status(auth_token=data['auth_token'])
+            err_msg = f"Failed to not allow login: \n Received data is: {data}"
 
-            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['status'] == 'success', msg=err_msg)
             self.assertTrue(data['data'] is not None)
             self.assertTrue(data['data']['email'] == user_payload['email'])
             self.assertTrue(data['data']['admin'] == 'true' or 'false')

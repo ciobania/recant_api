@@ -77,6 +77,7 @@ class User(BaseModel, UserMixin):
         :param auth_token:
         :return: integer|string
         """
+        print('SECRET_KEY', app.config.get('SECRET_KEY'))
         err_msg = '{} Please Log In again.'
         try:
             payload = jwt.decode(auth_token,
@@ -97,6 +98,7 @@ class User(BaseModel, UserMixin):
 
     def _gen_password_hash(self, password):
         return md5(b64encode(password.encode())).hexdigest()
+
 
 class Base(db_mongo.Document):
     meta = {'db_alias': 'tokens',

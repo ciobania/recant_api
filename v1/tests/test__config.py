@@ -7,7 +7,7 @@ from flask_testing import TestCase
 from flask_jwt_auth.v1.server import app
 
 
-DATABASE_URI = 'postgresql://es_user:es_password@192.168.1.133:54320/{}'
+DATABASE_URI = 'postgresql://es_user:es_password@192.168.1.137:54320/{}'
 
 
 class TestDevelopmentConfig(TestCase):
@@ -15,7 +15,7 @@ class TestDevelopmentConfig(TestCase):
     Test DevelopmentConfig works correctly.
     """
     def create_app(self):
-        app.config.from_object('v1.server.config.DevelopmentConfig')
+        app.config.from_object('flask_jwt_auth.v1.server.config.DevelopmentConfig')
         return app
 
     def test_app_is_development(self):
@@ -33,14 +33,15 @@ class TestTestingConfig(TestCase):
     Test application TestingConfig works correctly.
     """
     def create_app(self):
-        app.config.from_object('v1.server.config.TestingConfig')
+        app.config.from_object('flask_jwt_auth.v1.server.config.TestingConfig')
         return app
 
     def test_app_is_testing(self):
         """
         Test app is testing when config is: TestingConfig.
         """
-        self.assertFalse(app.config['SECRET_KEY'] == 'some_precious_secret_key_that_is_long')
+        self.assertFalse(app.config['SECRET_KEY'] == 'some_precious_secret_key_that_is_long',
+                         msg=app.config['SECRET_KEY'])
         self.assertTrue(app.config['DEBUG'])
         self.assertTrue(app.config['SQLALCHEMY_DATABASE_URI'] == DATABASE_URI.format('flask_jwt_auth_test'))
 
@@ -50,7 +51,7 @@ class TestProductionConfig(TestCase):
     Test application ProductionConfig works correctly.
     """
     def create_app(self):
-        app.config.from_object('v1.server.config.ProductionConfig')
+        app.config.from_object('flask_jwt_auth.v1.server.config.ProductionConfig')
         return app
 
     def test_app_is_production(self):

@@ -21,6 +21,7 @@ class LoginEndpoint(MethodView):
         print(f'post_payload is:: {post_payload}')
         try:
             user = User.query.filter_by(email=post_payload.get('email')).first()
+            print(f'user_type:: {type(user)}')
             # password_is_a_match = user.check_password_hash(post_payload.get('password'))
             password_is_a_match = post_payload.get('password') == user.password
             if user and password_is_a_match:

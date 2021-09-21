@@ -1,6 +1,7 @@
 # project/server/tests/base.py
+import os
 
-
+from dotenv import load_dotenv
 from flask_testing import TestCase
 
 from flask_jwt_auth.v1.server import app, db_sql
@@ -12,11 +13,13 @@ class BaseTestCase(TestCase):
     """
 
     def create_app(self):
-        app_cfg_obj = 'flask_jwt_auth.v1.server.config.TestingConfig'
+        load_dotenv('../../.env')
+        app_cfg_obj = os.getenv('APP_SETTINGS', 'flask_jwt_auth.v1.server.config.TestingConfig')
         app.config.from_object(app_cfg_obj)
         return app
 
     def setUp(self):
+        # this load_dotenv does not work, need to revisit to refactor one single configurable .env
         if app.config.get('DEBUG') and app.config.get('TESTING'):
             formatter = '\t|{:<32}|{:<15}|{:<5}|'
             print('\nConnecting to:: ')

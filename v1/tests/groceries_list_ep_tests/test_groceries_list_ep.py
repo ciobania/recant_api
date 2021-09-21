@@ -48,6 +48,7 @@ class TestGroceriesBlueprint(BaseTestCase):
             self.assertEqual(registered_data['status_code'], 201)
 
             login_data = self.auth.login_user(user_payload)
+            print('login_data::', login_data)
             self.assertTrue(login_data['status'] == 'success')
             self.assertTrue(login_data['message'] == 'Successfully logged in.')
             self.assertTrue(login_data['auth_token'])
@@ -66,6 +67,7 @@ class TestGroceriesBlueprint(BaseTestCase):
         self.add_groceries_lists(user_data=user_auth['user_data'])
         with self.client:
             req_response = self.gh.get_all_grocery_lists(auth_token=user_auth['auth_token'])
+            print(req_response)
             self.assertEqual(len(req_response['data']), len(self.gls))
             self.assertTrue(req_response['data'][0]['name'] == 'Grocery List 0')
             self.assertTrue(req_response['data'][0]['description'] == 'Description for Grocery List 0')
@@ -269,6 +271,8 @@ class TestGroceriesBlueprint(BaseTestCase):
         with self.client:
             data = self.gh.create_grocery_list(auth_token=user_auth['auth_token'],
                                                payload=grocery_list_payload)
+            self.assertTrue(data['status'] == 'success',
+                            msg=f'Failed to create groceries list. \nReceived data is:\n {data}')
             item_payload = {'name': 'New Item',
                             'description': 'New Item Description'}
             item_added_response = self.gh.add_item_to_list(auth_token=user_auth['auth_token'],
