@@ -67,7 +67,7 @@ class User(BaseModel, UserMixin):
                               app.config.get('SECRET_KEY'),
                               algorithm='HS256')
         except Exception as _:
-            err_msg = 'exception in uui:: {}'.format(_)
+            err_msg = 'exception_in uui:: {}'.format(_)
             return err_msg
 
     @staticmethod
