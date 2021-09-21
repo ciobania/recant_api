@@ -11,7 +11,7 @@ class BaseConfig:
     ENV = os.getenv('FLASK_ENV')
     DEBUG = os.getenv('DEBUG')
     SECRET_KEY = os.getenv('SECRET_KEY', 'some_precious_secret_key_that_is_long')
-    JWT_TTL = int(os.getenv('JWT_TTL'), 5)
+    JWT_TTL = int(os.getenv('JWT_TTL', 5))
     POSTGRES_LOCAL_BASE = 'postgresql://es_user:es_password@{}:54320/'.format(HOST_IP)
 
     BCRYPT_LOG_ROUNDS = 13
