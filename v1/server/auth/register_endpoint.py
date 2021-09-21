@@ -21,6 +21,7 @@ class RegisterEndpoint(MethodView):
         email = post_payload.get('email')
         password = post_payload.get('password')
         user = User.query.filter_by(email=email).first()
+        print('got user::', user)
         if not user:
             try:
                 role_name = 'normal_user'

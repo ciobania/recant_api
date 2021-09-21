@@ -1,5 +1,6 @@
 import os
 
+from dotenv import load_dotenv
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_security import SQLAlchemySessionUserDatastore, Security
@@ -8,9 +9,12 @@ from flask_mongoengine import MongoEngine
 
 # from flask_jwt_auth.v1.server.__init_app import app
 
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+load_dotenv(os.path.join(BASE_DIR, '../.env'))
+
 app = Flask(__name__)
 
-app_settings = os.getenv('APP_SETTINGS', 'flask_jwt_auth.v1.server.config.DevelopmentConfig')
+app_settings = os.getenv('APP_SETTINGS')
 app.config.from_object(app_settings)
 
 fbcrypt = Bcrypt(app)

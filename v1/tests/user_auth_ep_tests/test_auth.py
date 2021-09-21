@@ -154,7 +154,7 @@ class TestAuthBlueprint(BaseTestCase):
             self.assertEqual(data['status_code'], 200)
 
             data = self.auth.logout_user(auth_token=data['auth_token'])
-            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['status'] == 'success', msg=data)
             self.assertTrue(data['message'] == 'Successfully logged out.')
             self.assertEqual(data['status_code'], 200)
 
@@ -166,14 +166,14 @@ class TestAuthBlueprint(BaseTestCase):
                         'password': '0123456789'}
         with self.client:
             data = self.auth.register_user(user_payload=user_payload)
-            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['status'] == 'success', msg=data)
             self.assertTrue(data['message'] == 'Successfully registered.')
             self.assertTrue('auth_token' in data and data['auth_token'])
             self.assertTrue(data['content_type'] == 'application/json')
             self.assertEqual(data['status_code'], 201)
 
             data = self.auth.login_user(user_payload=user_payload)
-            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['status'] == 'success', msg=data)
             self.assertTrue(data['message'] == 'Successfully logged in.')
             self.assertTrue(data['auth_token'])
             self.assertTrue(data['content_type'] == 'application/json')
@@ -181,9 +181,9 @@ class TestAuthBlueprint(BaseTestCase):
 
             sleep(6)
             data = self.auth.logout_user(auth_token=data['auth_token'])
-            self.assertTrue(data['status'] == 'fail')
-            self.assertTrue(data['message'] == 'Signature expired. Please Log In again.')
-            self.assertEqual(data['status_code'], 400)
+            self.assertTrue(data['status'] == 'fail', msg=data)
+            self.assertTrue(data['message'] == 'Signature expired. Please Log In again.', msg=data)
+            self.assertEqual(data['status_code'], 400, msg=data)
 
     def test_registered_user_cannot_logout_with_blacklisted_token(self):
         """
@@ -193,14 +193,14 @@ class TestAuthBlueprint(BaseTestCase):
                         'password': '12345678900'}
         with self.client:
             data = self.auth.register_user(user_payload=user_payload)
-            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['status'] == 'success', msg=data)
             self.assertTrue(data['message'] == 'Successfully registered.')
             self.assertTrue(data['auth_token'])
             self.assertTrue(data['content_type'] == 'application/json')
             self.assertEqual(data['status_code'], 201)
 
             data = self.auth.login_user(user_payload=user_payload)
-            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['status'] == 'success', msg=data)
             self.assertTrue(data['message'] == 'Successfully logged in.')
             self.assertTrue(data['auth_token'])
             self.assertTrue(data['content_type'] == 'application/json')
@@ -211,9 +211,9 @@ class TestAuthBlueprint(BaseTestCase):
 
             # blacklisted valid token logout
             data = self.auth.logout_user(auth_token=data['auth_token'])
-            self.assertTrue(data['status'] == 'fail')
-            self.assertTrue(data['message'] == 'Token is blacklisted. Please Log In again.')
-            self.assertEqual(data['status_code'], 400)
+            self.assertTrue(data['status'] == 'fail', msg=data)
+            self.assertTrue(data['message'] == 'Token is blacklisted. Please Log In again.', msg=data)
+            self.assertEqual(data['status_code'], 400, msg=data)
 
     def test_user_auth_status_with_a_valid_blacklisted_token(self):
         """
@@ -227,10 +227,9 @@ class TestAuthBlueprint(BaseTestCase):
             blacklist_token.save()
 
             data = self.auth.auth_status(auth_token=data['auth_token'])
-
-            self.assertTrue(data['status'] == 'fail')
-            self.assertTrue(data['message'] == 'Token is blacklisted. Please Log In again.')
-            self.assertEqual(data['status_code'], 401)
+            self.assertTrue(data['status'] == 'fail', msg=data)
+            self.assertTrue(data['message'] == 'Token is blacklisted. Please Log In again.', msg=data)
+            self.assertEqual(data['status_code'], 401, msg=data)
 
     def test_user_status_with_malformed_bearer_token(self):
         """
@@ -244,9 +243,9 @@ class TestAuthBlueprint(BaseTestCase):
             response = self.client.get('/auth/status',
                                        headers=headers)
             data = json.loads(response.data.decode())
-            self.assertTrue(data['status'] == 'fail')
-            self.assertTrue(data['message'] == 'Authorization Bearer token is missing or malformed.')
-            self.assertEqual(response.status_code, 400)
+            self.assertTrue(data['status'] == 'fail', msg=data)
+            self.assertTrue(data['message'] == 'Authorization Bearer token is missing or malformed.', msg=data)
+            self.assertEqual(response.status_code, 400, msg=data)
 
 
 if __name__ == '__main__':

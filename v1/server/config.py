@@ -1,18 +1,13 @@
 # project/server/config.py
-from dotenv import load_dotenv
-
 import os
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-load_dotenv(os.path.join(BASE_DIR, '.env'))
-HOST_IP = os.getenv('HOST_IP')
-print(HOST_IP)
 
 class BaseConfig:
-    """Base configuration."""
-    HOST_IP = HOST_IP
+    """
+    Base configuration.
+    """
+    HOST_IP = os.getenv('HOST_IP')
     APP_SETTINGS = os.getenv('APP_SETTINGS')
-    print(APP_SETTINGS)
     ENV = os.getenv('FLASK_ENV')
     DEBUG = os.getenv('DEBUG')
     SECRET_KEY = os.getenv('SECRET_KEY', 'some_precious_secret_key_that_is_long')
@@ -36,9 +31,9 @@ class BaseConfig:
 
 
 class DevelopmentConfig(BaseConfig):
-    """Development configuration."""
-    ENV = BaseConfig.ENV
-    DEBUG = BaseConfig.DEBUG
+    """
+    Development configuration.
+    """
     BCRYPT_LOG_ROUNDS = 4
     DATABASE_NAME = 'flask_jwt_auth'
     POSTGRES_LOCAL_BASE = 'postgresql://es_user:es_password@{}:54320/'.format(BaseConfig.HOST_IP)
@@ -46,8 +41,9 @@ class DevelopmentConfig(BaseConfig):
 
 
 class TestingConfig(BaseConfig):
-    """Testing configuration."""
-    ENV = BaseConfig.ENV
+    """
+    Testing configuration.
+    """
     DEBUG = True
     TESTING = True
     BCRYPT_LOG_ROUNDS = 4
@@ -73,7 +69,9 @@ class TestingConfig(BaseConfig):
 
 
 class ProductionConfig(BaseConfig):
-    """Production configuration."""
+    """
+    Production configuration.
+    """
     ENV = 'production'
     SECRET_KEY = 'my_precious'
     DEBUG = False

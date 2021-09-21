@@ -3,13 +3,13 @@
 # vim: set fileencoding=utf-8 :
 # author: 'ACIOBANI'
 
-from base64 import b64encode
-from hashlib import md5
-
 import jwt
+
+from base64 import b64encode
 from datetime import datetime, timedelta
 from flask_security import UserMixin
 from uuid import NAMESPACE_DNS, uuid5, UUID
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from flask_jwt_auth.v1.server import app, db_sql, db_mongo
 from flask_jwt_auth.v1.server.models import BaseModel, user_roles
@@ -34,7 +34,6 @@ class User(BaseModel, UserMixin):
         super().__init__()
         self.email = email
         self.password = password  # self.generate_password_hash(password)
-        print(f'User password is:: {self.password}\nReceived password is:: {password}')
         self.registered_on = datetime.now()
         self.is_admin = is_admin
         # TODO: should I add a try/except for TypeError: Incompatible collection type: tuple is not list-like?
@@ -50,7 +49,8 @@ class User(BaseModel, UserMixin):
         return self._gen_password_hash(password)
 
     def check_password_hash(self, password):
-        return self.password == self._gen_password_hash(password)
+        self._gen_password_hash(password)
+        return check_password_hash(self.password_hash, self.password)
 
     @staticmethod
     def encode_auth_token(user_id):
@@ -60,7 +60,7 @@ class User(BaseModel, UserMixin):
         :return: string
         """
         try:
-            payload = {'exp': datetime.utcnow() + timedelta(days=0, seconds=5),
+            payload = {'exp': datetime.utcnow() + timedelta(seconds=app.config.get('JWT_TTL')),
                        'iat': datetime.utcnow(),
                        'sub': user_id.hex}
             return jwt.encode(payload,
@@ -77,11 +77,11 @@ class User(BaseModel, UserMixin):
         :param auth_token:
         :return: integer|string
         """
-        print('SECRET_KEY', app.config.get('SECRET_KEY'))
         err_msg = '{} Please Log In again.'
         try:
             payload = jwt.decode(auth_token,
-                                 app.config.get('SECRET_KEY'))
+                                 app.config.get('SECRET_KEY'),
+                                 algorithms=['HS256', ])
             token_is_blacklisted = BlacklistToken.check_blacklist(auth_token)
             if token_is_blacklisted:
                 err_msg = err_msg.format('Token is blacklisted.')
@@ -97,7 +97,7 @@ class User(BaseModel, UserMixin):
         return err_msg
 
     def _gen_password_hash(self, password):
-        return md5(b64encode(password.encode())).hexdigest()
+        self.password_hash = generate_password_hash(b64encode(password).decode())
 
 
 class Base(db_mongo.Document):

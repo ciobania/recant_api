@@ -12,6 +12,7 @@ from flask_jwt_auth.v1.server.models import User
 def login_required(method):
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
+        print(request.headers)
         auth_header = request.headers.get('Authorization')
         if auth_header:
             try:
