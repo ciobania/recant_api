@@ -2,6 +2,7 @@ FROM python:3.9-slim-buster
 
 COPY . /srv/flask_jwt_auth
 WORKDIR /srv/flask_jwt_auth
+COPY v1/.env_prod v1/.env
 
 RUN apt-get clean && apt-get update
 RUN apt -y install libpq-dev gcc libffi-dev nginx python3-dev build-essential
