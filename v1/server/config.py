@@ -79,8 +79,12 @@ class ProductionConfig(BaseConfig):
     DATABASE_NAME = 'flask_jwt_auth_prod'
     POSTGRES_LOCAL_BASE = 'postgresql://es_user:es_password@{}:54320/'.format(BaseConfig.HOST_IP)
     SQLALCHEMY_DATABASE_URI = POSTGRES_LOCAL_BASE + DATABASE_NAME
-    MONGODB_SETTINGS = {'db': 'tokens',
-                        'host': BaseConfig.HOST_IP,
-                        'port': 27017,
-                        'username': 'bt_user',
-                        'password': 'bt_password'}
+    PRESERVE_CONTEXT_ON_EXCEPTION = False
+    MONGODB_SETTINGS = {
+        'db': 'tokens',
+        'host': 'mongodb://bt_user:bt_password@{}:27017/tokens?authSource=admin'.format(BaseConfig.HOST_IP)}
+    MONGODB_DB = 'tokens'
+    MONGODB_HOST = BaseConfig.HOST_IP
+    MONGODB_PORT = 27017
+    MONGODB_USERNAME = 'bt_user'
+    MONGODB_PASSWORD = 'bt_password'

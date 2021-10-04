@@ -33,7 +33,7 @@ class User(BaseModel, UserMixin):
     def __init__(self, email, password, username=None, is_admin=False, roles=('admin',)):
         super().__init__()
         self.email = email
-        self.password = password  # self.generate_password_hash(password)
+        self.password = self.generate_password_hash(password)
         self.registered_on = datetime.now()
         self.is_admin = is_admin
         # TODO: should I add a try/except for TypeError: Incompatible collection type: tuple is not list-like?
@@ -46,11 +46,12 @@ class User(BaseModel, UserMixin):
             self.save()
 
     def generate_password_hash(self, password):
-        return self._gen_password_hash(password)
+        self._gen_password_hash(password)
+        return self.password_hash
 
     def check_password_hash(self, password):
         self._gen_password_hash(password)
-        return check_password_hash(self.password_hash, self.password)
+        return check_password_hash(self.password, b64encode(password.encode()).decode())
 
     @staticmethod
     def encode_auth_token(user_id):
@@ -97,7 +98,7 @@ class User(BaseModel, UserMixin):
         return err_msg
 
     def _gen_password_hash(self, password):
-        self.password_hash = generate_password_hash(b64encode(password).decode())
+        self.password_hash = generate_password_hash(b64encode(password.encode()).decode())
 
 
 class Base(db_mongo.Document):

@@ -25,7 +25,7 @@ class LoginEndpoint(MethodView):
                                    'message': 'User does not exist.'}
                 return make_response(jsonify(response_object)), 404
             else:
-                password_is_a_match = post_payload.get('password') == user.password
+                password_is_a_match = user.check_password_hash(post_payload.get('password'))
                 if password_is_a_match:
                     auth_token = user.encode_auth_token(user_id=user.id)
                     if auth_token:
