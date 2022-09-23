@@ -1,4 +1,4 @@
-v1/server/.env
+.env*
 env
 venv
 temp
