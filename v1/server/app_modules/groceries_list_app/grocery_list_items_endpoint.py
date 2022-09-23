@@ -47,6 +47,7 @@ class GroceryListItemEndpoint(MethodView):
             new_list_item = GroceriesListItem(**list_item, grocery_list_id=grocery_list_id, user=g.user).as_dict()
             response_object = {'status': 'success',
                                'data': new_list_item}
+            print(response_object)
             return make_response(jsonify(response_object)), 200
 
     @login_required

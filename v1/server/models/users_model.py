@@ -106,8 +106,6 @@ class Base(db_mongo.Document):
             'collection': 'blacklist_tokens',
             'allow_inheritance': True}
 
-    # _id = db_mongo.UUIDField(required=True,
-    #                          primary_key=True)
     created_at = db_mongo.DateTimeField(default=datetime.now, required=True)
     written_at = db_mongo.DateTimeField(default=datetime.now, required=True)
 

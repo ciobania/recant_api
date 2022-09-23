@@ -45,7 +45,7 @@ class TestUserModel(BaseTestCase):
         self.assertTrue(password != user.password,
                         msg=err_msg_password_mismatch.format(user.password,
                                                              user.password_hash))
-        self.assertTrue(user.password_hash != user.password,
+        self.assertTrue(user.password_hash == user.password,
                         msg=err_msg_password_mismatch.format(user.password,
                                                              user.password_hash))
 

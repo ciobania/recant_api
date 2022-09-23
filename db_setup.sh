@@ -6,8 +6,14 @@ else
 fi
 
 
-#psql -h 192.168.1.137 -p 54320 -U es_user -W eventstore -c "create database flask_jwt_auth;"
-#psql -h 192.168.1.137 -p 54320 -U es_user -W eventstore -c "create database flask_jwt_auth_test;"
+psql -h 192.168.1.137 -p 54320 -U es_user -W flask_jwt_auth_test -c "delete from alembic_version;"
+
+psql -h 192.168.1.137 -p 54320 -U es_user -W eventstore -c "drop database flask_jwt_auth;"
+psql -h 192.168.1.137 -p 54320 -U es_user -W eventstore -c "create database flask_jwt_auth;"
+
+psql -h 192.168.1.137 -p 54320 -U es_user -W eventstore -c "drop database flask_jwt_auth_test;"
+psql -h 192.168.1.137 -p 54320 -U es_user -W eventstore -c "create database flask_jwt_auth_test;"
+
 
 # old_migrate via manage.py
 # python3 manage.py create_db

@@ -58,15 +58,6 @@ class GroceriesList(BaseModel):
         if self.auto_save:
             self.save()
 
-    def as_dict(self):
-        response_object = {column.name: getattr(self, column.name) for column in self.__table__.columns}
-        if hasattr(self, 'created_by'):
-            response_object['created_by'] = UUID(str(self.created_by))
-
-        response_object['total_items'] = 0
-
-        return response_object
-
 
 class GroceriesListItem(BaseModel):
     """
@@ -95,10 +86,3 @@ class GroceriesListItem(BaseModel):
 
         if self.auto_save:
             self.save()
-
-    def as_dict(self):
-        response_object = {column.name: getattr(self, column.name) for column in self.__table__.columns}
-        if hasattr(self, 'created_by'):
-            response_object['created_by'] = str(self.created_by)
-
-        return response_object

@@ -8,7 +8,7 @@ class BaseConfig:
     """
     HOST_IP = os.getenv('HOST_IP')
     APP_SETTINGS = os.getenv('APP_SETTINGS')
-    ENV = os.getenv('FLASK_ENV')
+    # ENV = os.getenv('FLASK_ENV')
     DEBUG = os.getenv('DEBUG')
     SECRET_KEY = os.getenv('SECRET_KEY', 'some_precious_secret_key_that_is_long')
     JWT_TTL = int(os.getenv('JWT_TTL', 5))
@@ -23,7 +23,7 @@ class BaseConfig:
     #                     'password': 'bt_password'}
     MONGODB_SETTINGS = {
         'db': 'tokens',
-        'host': 'mongodb://bt_user:bt_password@{}:27017/tokens?authSource=admin'.format(HOST_IP)}
+        'host': 'mongodb://bt_user:bt_password@{}:27017/tokens'.format(HOST_IP)}
     MONGODB_DB = 'tokens'
     MONGODB_HOST = HOST_IP
     MONGODB_PORT = 27017
@@ -61,7 +61,7 @@ class TestingConfig(BaseConfig):
     # TODO: need to sort out why I use the tokens, and where I use the postgresql
     MONGODB_SETTINGS = {
         'db': 'tokens',
-        'host': 'mongodb://bt_user:bt_password@{}:27017/tokens?authSource=admin'.format(BaseConfig.HOST_IP)}
+        'host': 'mongodb://bt_user:bt_password@{}:27017/tokens'.format(BaseConfig.HOST_IP)}
     MONGODB_DB = 'tokens'
     MONGODB_HOST = BaseConfig.HOST_IP
     MONGODB_PORT = 27017
@@ -82,7 +82,7 @@ class ProductionConfig(BaseConfig):
     PRESERVE_CONTEXT_ON_EXCEPTION = False
     MONGODB_SETTINGS = {
         'db': 'tokens',
-        'host': 'mongodb://bt_user:bt_password@{}:27017/tokens?authSource=admin'.format(BaseConfig.HOST_IP)}
+        'host': 'mongodb://bt_user:bt_password@{}:27017/tokens'.format(BaseConfig.HOST_IP)}
     MONGODB_DB = 'tokens'
     MONGODB_HOST = BaseConfig.HOST_IP
     MONGODB_PORT = 27017
