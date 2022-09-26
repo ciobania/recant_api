@@ -2,3 +2,7 @@
 .idea/
 venv/
 .env*
+
+hashed_password.txt
+hasing_verification.py
+not_hashed_password.txt
