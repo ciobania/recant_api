@@ -9,7 +9,7 @@ RUN apt-get -y install libpq-dev gcc libffi-dev nginx python3-dev build-essentia
 
 RUN pip install --upgrade pip && \
     pip install wheel && \
-    pip -r configs/requirements.txt --src /usr/local/src
+    pip install -r configs/requirements.txt --src /usr/local/src
 
 COPY configs/nginx.conf /etc/nginx
 RUN chmod +x ./start_server.sh
