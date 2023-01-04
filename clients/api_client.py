@@ -2,35 +2,32 @@
 # -*- coding: utf-8 -*-
 # vim: set fileencoding=utf-8 :
 # author: 'ACIOBANI'
-import json
-import unittest
 
-from flask_jwt_auth.v1.server.models import GroceriesList, User
-from flask_jwt_auth.v1.tests.base_test_case import BaseTestCase
+import json
+
+import requests
+
+from flask_jwt_auth.v1.server.models import User, GroceriesList
 from flask_jwt_auth.clients.groceries_helpers import GroceriesHelpers
 from flask_jwt_auth.clients.auth_helpers import AuthHelpers
 
 
-class TestGroceriesBlueprint(BaseTestCase):
+class APIClient:
     auth = None
     user_data = None
     gls = []
     should_register_and_login = False
 
-    def setUp(self):
-        super(TestGroceriesBlueprint, self).setUp()
-        self.auth = AuthHelpers(self.client)
-        self.gh = GroceriesHelpers(self.client)
+    def __init__(self):
+        self.session = requests.session()
+        self.auth = AuthHelpers(self.session)
+        self.gh = GroceriesHelpers(self.session)
         self.gls = []
-        print('self.app.config::', self.app.config)
-
-    def tearDown(self):
-        super(TestGroceriesBlueprint, self).tearDown()
-        # pass
+        # print('self.app.config::', self.app.config)
 
     def add_groceries_lists(self, user_data):
         for idx in range(5):
-            gl = {'name': f'Grocery List {idx}',
+            gl = {'name': f'Init Grocery List {idx}',
                   'description': f'Description for Grocery List {idx}',
                   'user': user_data}
             self.gls.append(GroceriesList(**gl))
@@ -38,7 +35,7 @@ class TestGroceriesBlueprint(BaseTestCase):
     def register_and_login(self, email):
         user_payload = {'email': '{}@mailinator.com'.format(email),
                         'password': '1234567890'}
-        with self.client:
+        with self.session:
             registered_data = self.auth.register_user(user_payload=user_payload)
             print('registered_data::', registered_data)
             self.assertTrue(registered_data['status'] == 'success', msg=f'Status is: {registered_data["status"]}')

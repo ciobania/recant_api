@@ -38,7 +38,11 @@ class BaseModel(db_sql.Model):
         except IntegrityError as _:
             db_sql.session.rollback()
             self_params = {param: param_value for param, param_value in self.as_dict().items() if param_value}
-            self.__dict__ = dict(db_sql.session.query(self.__table__).filter_by(**self_params).first())
+            try:
+                self.__dict__ = dict(db_sql.session.query(self.__table__).filter_by(**self_params).first())
+            except TypeError as _:
+                print(f'{self_params=}')
+                print(f'{self.__table__=}')
 
     def delete(self):
         db_sql.session.delete(self)

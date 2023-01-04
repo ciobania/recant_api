@@ -3,10 +3,9 @@
 # vim: set fileencoding=utf-8 :
 # author: 'ACIOBANI'
 
-from uuid import uuid4, UUID
+from uuid import uuid4
 
 from sqlalchemy import UniqueConstraint
-from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm import backref
 
 from flask_jwt_auth.v1.server import db_sql

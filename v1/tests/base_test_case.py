@@ -1,7 +1,7 @@
 # project/server/tests/base.py
 import os
 
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from flask_testing import TestCase
 
 from flask_jwt_auth.v1.server import app, db_sql, BASE_DIR

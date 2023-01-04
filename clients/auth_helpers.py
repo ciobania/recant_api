@@ -3,7 +3,7 @@
 # vim: set fileencoding=utf-8 :
 # author: 'ACIOBANI'
 
-from flask_jwt_auth.v1.tests.helpers import RequestHelpers
+from flask_jwt_auth.clients.request_helpers import RequestHelpers
 
 
 class AuthHelpers:

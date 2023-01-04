@@ -28,7 +28,7 @@ class TestUserModel(BaseTestCase):
         """
         Test can encode auth token.
         """
-        role_name = 'admin'
+        role_name = 'admin_test'
         email = 'test@test.com'
         password = 'test'
         role = Role(role_name)
