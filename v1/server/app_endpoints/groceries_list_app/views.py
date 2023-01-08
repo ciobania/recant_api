@@ -5,9 +5,9 @@
 
 from flask import Blueprint
 
-from flask_jwt_auth.v1.server.app_modules.groceries_list_app.groceries_list_endpoint import GroceriesListEndpoint
-from flask_jwt_auth.v1.server.app_modules.groceries_list_app.grocery_list_items_endpoint import GroceryListItemEndpoint
-from flask_jwt_auth.v1.server.app_modules.groceries_list_app.grocery_list_share_endpoint import GroceryListShareEndpoint
+from flask_jwt_auth.v1.server.app_endpoints.groceries_list_app.groceries_list_endpoint import GroceriesListEndpoint
+from flask_jwt_auth.v1.server.app_endpoints.groceries_list_app.grocery_list_items_endpoint import GroceryListItemEndpoint
+from flask_jwt_auth.v1.server.app_endpoints.groceries_list_app.grocery_list_share_endpoint import GroceryListShareEndpoint
 
 groceries_list_bp = Blueprint('groceries_list', __name__)
 

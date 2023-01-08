@@ -6,7 +6,7 @@ from flask import make_response, jsonify, g, request
 from flask.views import MethodView
 
 from flask_jwt_auth.v1.server.auth.auth_helpers import login_required
-from flask_jwt_auth.v1.server.models import TodosList
+from flask_jwt_auth.v1.server.models import TodoList
 
 
 class TodosListEndpoint(MethodView):
@@ -19,7 +19,7 @@ class TodosListEndpoint(MethodView):
 
         if todo_list_id:
             try:
-                todo_list = TodosList.query.filter_by(id=todo_list_id).first()
+                todo_list = TodoList.query.filter_by(id=todo_list_id).first()
                 response_object = {'status': 'success',
                                    'data': todo_list}
                 return make_response(jsonify(response_object)), 200
@@ -29,7 +29,7 @@ class TodosListEndpoint(MethodView):
                                    'message': err_msg.format(_)}
                 return make_response(jsonify(response_object)), 401
         else:
-            todos_list = TodosList.query.filter().order_by(TodosList.created_at).all()
+            todos_list = TodoList.query.filter().order_by(TodoList.created_at).all()
             todo_ls = [item.as_dict() for item in todos_list if todos_list]
             response_object = {'status': 'success',
                                'data': todo_ls}
@@ -45,13 +45,13 @@ class TodosListEndpoint(MethodView):
         if not todo_list_id:
             add_todo_list = {'name': request_payload.get('name'),
                              'description': request_payload.get('description')}
-            new_todo_list = TodosList(**add_todo_list).as_dict()
+            new_todo_list = TodoList(**add_todo_list).as_dict()
 
             response_object = {'status': 'success',
                                'data': new_todo_list}
             return make_response(jsonify(response_object)), 200
         elif todo_list_id:
-            todo_list = TodosList.query.filter_by(id=todo_list_id).first()
+            todo_list = TodoList.query.filter_by(id=todo_list_id).first()
             if not todo_list:
                 response_object = {'status': 'fail',
                                    'message': 'Resource not found.'}
@@ -75,7 +75,7 @@ class TodosListEndpoint(MethodView):
         if todo_list_id:
             response_object = {'status': 'success',
                                'message': 'ToDo List with id: {} was deleted.'.format(todo_list_id)}
-            todo_list = TodosList.query.filter(user_id=g.user.id, todo_list_id=todo_list_id)
+            todo_list = TodoList.query.filter(user_id=g.user.id, todo_list_id=todo_list_id)
             if not todo_list:
                 response_object = {'status': 'fail',
                                    'message': 'Resource not found.'}

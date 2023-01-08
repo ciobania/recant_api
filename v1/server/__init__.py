@@ -23,8 +23,8 @@ db_mongo = MongoEngine(app)
 
 from flask_jwt_auth.v1.server.models import Role, User
 from flask_jwt_auth.v1.server.auth.views import auth_bp
-from flask_jwt_auth.v1.server.app_modules.groceries_list_app.views import groceries_list_bp
-from flask_jwt_auth.v1.server.app_modules.calendar_todos_app.views import todos_calendar_bp
+from flask_jwt_auth.v1.server.app_endpoints.groceries_list_app.views import groceries_list_bp
+from flask_jwt_auth.v1.server.app_endpoints.calendar_todos_app.views import todos_calendar_bp
 
 user_datastore = SQLAlchemySessionUserDatastore(db_sql.session,
                                                 User, Role)

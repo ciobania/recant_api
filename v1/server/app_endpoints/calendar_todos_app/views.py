@@ -5,14 +5,14 @@
 
 from flask import Blueprint
 
-from flask_jwt_auth.v1.server.app_modules.calendar_todos_app.todos_list_endpoint import TodosListEndpoint
-from flask_jwt_auth.v1.server.app_modules.calendar_todos_app.todos_list_items_endpoint import TodoListItemEndpoint
+from flask_jwt_auth.v1.server.app_endpoints.calendar_todos_app.todos_list_endpoint import TodosListEndpoint
+from flask_jwt_auth.v1.server.app_endpoints.calendar_todos_app.todos_list_items_endpoint import TodoItemEndpoint
 
 todos_calendar_bp = Blueprint('todos_list', __name__)
 
 # define auth API resources
 todos_calendar_view = TodosListEndpoint.as_view('todos_calendar_api')
-todos_calendar_item_view = TodoListItemEndpoint.as_view('todos_calendar_item_api')
+todos_calendar_item_view = TodoItemEndpoint.as_view('todos_calendar_item_api')
 # todos_calendar_share_view = GroceryListShareEndpoint.as_view('todos_calendar_share_api')
 
 todos_calendar_bp.add_url_rule('/api/todos',
