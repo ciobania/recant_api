@@ -22,18 +22,20 @@ class TestGroceriesBlueprint(BaseTestCase):
         self.auth = AuthHelpers(self.client)
         self.gh = GroceriesHelpers(self.client)
         self.gls = []
-        print('self.app.config::', self.app.config)
 
     def tearDown(self):
         super(TestGroceriesBlueprint, self).tearDown()
         # pass
 
-    def add_groceries_lists(self, user_data):
+    def add_groceries_lists(self, grocery_list_name, user_data):
+        print(f'{user_data=}')
         for idx in range(5):
-            gl = {'name': f'Grocery List {idx}',
-                  'description': f'Description for Grocery List {idx}',
-                  'user': user_data}
-            self.gls.append(GroceriesList(**gl))
+            grocery_list_payload = {'name': f'Grocery List {idx} - {grocery_list_name}',
+                                    'description': f'Description for Grocery List {idx}'}
+            data = self.gh.create_grocery_list(auth_token=user_data['auth_token'],
+                                               payload=grocery_list_payload)
+            print(f'{data=}')
+            self.gls.append(data['data'])
 
     def register_and_login(self, email):
         user_payload = {'email': '{}@mailinator.com'.format(email),
@@ -56,25 +58,28 @@ class TestGroceriesBlueprint(BaseTestCase):
             self.assertEqual(login_data['status_code'], 200)
 
             response_object = {'auth_token': login_data['auth_token'],
-                               'user_data': User.query.filter_by(email=user_payload['email']).first()}
+                               'user_data': User.query.filter_by(email=user_payload['email']).first().as_dict()}
             return response_object
 
     def test_can_get_all_grocery_list(self):
         """
         Test can successfully get all grocery lists.
         """
-        user_auth = self.register_and_login(email='grocery_list_user')
-        self.add_groceries_lists(user_data=user_auth['user_data'])
+        user_auth = self.register_and_login(email='can_get_all_grocery_lists')
+        self.add_groceries_lists(grocery_list_name='can_get_all_grocery_lists', user_data=user_auth)
         with self.client:
             req_response = self.gh.get_all_grocery_lists(auth_token=user_auth['auth_token'])
-            print(req_response)
-            self.assertEqual(len(req_response['data']), len(self.gls))
-            self.assertTrue(req_response['data'][0]['name'] == 'Grocery List 0')
-            self.assertTrue(req_response['data'][0]['description'] == 'Description for Grocery List 0')
-            # self.assertTrue(req_response['data'][0]['total_items'] == 0)
-            self.assertTrue(req_response['data'][0]['id'] == str(self.gls[0].id),
-                            msg='Received:: {}\nExpected:: {}'.format(req_response['data'][0]['id'],
-                                                                      self.gls))
+            self.assertEqual(len(req_response['data']), len(self.gls),
+                             msg='\nReceived:: {}\nExpected:: {}'.format(len(req_response['data']), len(self.gls)))
+            self.assertTrue(req_response['data'][0]['name'] == self.gls[0]['name'],
+                            msg='\nReceived:: {}\nExpected:: {}'.format(req_response['data'][0]['name'],
+                                                                        self.gls[0]['name']))
+            self.assertTrue(req_response['data'][0]['description'] == self.gls[0]['description'],
+                            msg='\nReceived:: {}\nExpected:: {}'.format(req_response['data'][0]['description'],
+                                                                        self.gls[0]['description']))
+            self.assertTrue(req_response['data'][0]['id'] == self.gls[0]['id'],
+                            msg='\nReceived:: {}\nExpected:: {}'.format(req_response['data'][0]['id'],
+                                                                        self.gls[0]['id']))
 
     def test_cannot_get_grocery_list_without_login(self):
         """
@@ -93,7 +98,7 @@ class TestGroceriesBlueprint(BaseTestCase):
         """
         Test that can create a grocery list.
         """
-        grocery_list_payload = {'name': 'Grocery List 2',
+        grocery_list_payload = {'name': 'Grocery List 2 - can_create_grocery_list',
                                 'description': 'List of 2020'}
         user_auth = self.register_and_login(email='grocery_create_list_user')
         with self.client:
@@ -105,7 +110,6 @@ class TestGroceriesBlueprint(BaseTestCase):
             self.assertTrue(data['data']['description'] == grocery_list_payload['description'],
                             msg='Received: {}'.format(data['data']['name']))
             self.assertTrue(isinstance(data['data']['id'], str))
-            # self.assertTrue(data['data']['total_items'] == 0)
 
     def test_can_update_a_grocery_list(self):
         """
@@ -114,26 +118,25 @@ class TestGroceriesBlueprint(BaseTestCase):
         grocery_list_payload = {'name': 'Grocery List update',
                                 'description': 'List of 2020 updated'}
         user_auth = self.register_and_login(email='grocery_update_list_user')
-        self.add_groceries_lists(user_data=user_auth['user_data'])
+        self.add_groceries_lists(grocery_list_name='grocery_update_list_user', user_data=user_auth)
         with self.client:
             data = self.gh.update_grocery_list(auth_token=user_auth['auth_token'],
                                                payload=grocery_list_payload,
-                                               gls_id=self.gls[4].id)
+                                               gls_id=self.gls[4]['id'])
             self.assertTrue(data['name'] == grocery_list_payload['name'],
                             msg='Received: {}'.format(data['name']))
             self.assertTrue(data['description'] == grocery_list_payload['description'],
                             msg='Received: {}'.format(data['name']))
             self.assertTrue(isinstance(data['id'], str))
-            # self.assertTrue(data['total_items'] == 0)
 
     def test_can_delete_a_grocery_list(self):
         """
         Test that can delete a grocery list.
         """
         user_auth = self.register_and_login(email='grocery_delete_list_user')
-        self.add_groceries_lists(user_data=user_auth['user_data'])
+        self.add_groceries_lists(grocery_list_name='grocery_delete_list_user', user_data=user_auth)
         with self.client:
-            gls_id = self.gls[3].id
+            gls_id = self.gls[3]['id']
             data = self.gh.delete_grocery_list(auth_token=user_auth['auth_token'], gls_id=gls_id)
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['message'] == 'Grocery List with id: {} was deleted.'.format(gls_id))
@@ -142,7 +145,7 @@ class TestGroceriesBlueprint(BaseTestCase):
         """
         Test that can share a grocery list created by a user with another user.
         """
-        grocery_list_payload = {'name': 'Grocery List 2',
+        grocery_list_payload = {'name': 'Grocery List 2 share with another user',
                                 'description': 'List of 2020'}
         user_auth_1 = self.register_and_login(email='grocery_create_list_user_2')
         user_auth_2 = self.register_and_login(email='grocery_create_list_user_3')
@@ -153,11 +156,12 @@ class TestGroceriesBlueprint(BaseTestCase):
                             msg='Received: {}'.format(data['data']['name']))
             self.assertTrue(data['data']['description'] == grocery_list_payload['description'],
                             msg='Received: {}'.format(data['data']['name']))
-            self.assertTrue(isinstance(data['data']['id'], str))
+            self.assertTrue(isinstance(data['data']['id'], str),
+                            msg=f"type for id is:: {type(data['data']['id'])}")
             # self.assertTrue(data['data']['total_items'] == 0)
 
             # share with email and list id
-            share_payload = {'email': user_auth_2['user_data'].email,
+            share_payload = {'email': user_auth_2['user_data']['email'],
                              'grocery_list_id': data['data']['id']}
             data = self.gh.share_grocery_list(auth_token=user_auth_1['auth_token'],
                                               payload=share_payload)
@@ -178,8 +182,8 @@ class TestGroceriesBlueprint(BaseTestCase):
         """
         Test that user cannot view lists that are not owned or shared with him.
         """
-        grocery_list_payload = {'name': 'Grocery List 3',
-                                'description': 'Grocery List of 2020'}
+        grocery_list_payload = {'name': 'Cannot Share Grocery List',
+                                'description': 'Cannot Share Grocery List of 2020'}
         user_auth_4 = self.register_and_login(email='grocery_create_list_user_4')
         user_auth_5 = self.register_and_login(email='grocery_create_list_user_5')
         user_auth_6 = self.register_and_login(email='grocery_create_list_user_6')
@@ -190,9 +194,10 @@ class TestGroceriesBlueprint(BaseTestCase):
                             msg='Received: {}'.format(data['data']['name']))
 
             # share with email and list id
-            sharing_payload = {'email': user_auth_5['user_data'].email,
+            sharing_payload = {'email': user_auth_5['user_data']['email'],
                                'grocery_list_id': data['data']['id']}
-            data = self.gh.share_grocery_list(payload=sharing_payload, auth_token=user_auth_4['auth_token'])
+            print(f'share_cannot_share_with_view:: {data}')
+            data = self.gh.share_grocery_list(payload=sharing_payload, auth_token=user_auth_5['auth_token'])
 
             expected_status_msg = 'Grocery List {} was shared with user {}.'.format(sharing_payload["grocery_list_id"],
                                                                                     sharing_payload["email"])
@@ -228,7 +233,7 @@ class TestGroceriesBlueprint(BaseTestCase):
                             msg='Received: {}'.format(data['data']['name']))
 
             # share with email and list id
-            sharing_payload = {'email': user_auth_8['user_data'].email,
+            sharing_payload = {'email': user_auth_8['user_data']['email'],
                                'grocery_list_id': data['data']['id']}
             data = self.gh.share_grocery_list(auth_token=user_auth_7['auth_token'],
                                               payload=sharing_payload)
@@ -265,9 +270,9 @@ class TestGroceriesBlueprint(BaseTestCase):
         """
         Test that can add item to a grocery list.
         """
-        grocery_list_payload = {'name': 'Grocery List With Item',
-                                'description': 'Item in List of 2020'}
-        user_auth = self.register_and_login(email='grocery_add_item_to_list_user')
+        grocery_list_payload = {'name': 'Grocery List With Added Item',
+                                'description': 'Item in List of 2020 Added List'}
+        user_auth = self.register_and_login(email='grocery_add_item_to_grocery_list')
         with self.client:
             data = self.gh.create_grocery_list(auth_token=user_auth['auth_token'],
                                                payload=grocery_list_payload)
@@ -285,14 +290,15 @@ class TestGroceriesBlueprint(BaseTestCase):
         Test that can delete a grocery list item.
         """
         user_auth = self.register_and_login(email='grocery_delete_list_item_user')
-        self.add_groceries_lists(user_data=user_auth['user_data'])
+        self.add_groceries_lists(grocery_list_name='grocery_delete_list_user', user_data=user_auth)
         with self.client:
-            gls_id = self.gls[3].id
+            gls_id = self.gls[3]['id']
             item_payload = {'name': 'New Item To Delete',
                             'description': 'New Item To Delete Description'}
             item_added_response = self.gh.add_item_to_list(auth_token=user_auth['auth_token'],
                                                            gls_id=gls_id,
                                                            payload=item_payload)
+            print(f'{item_added_response=}')
             self.assertTrue(item_added_response['status'] == 'success')
             delete_payload = {'item_id': item_added_response['data']['id']}
             item_deleted_response = self.gh.delete_item_from_grocery_list(auth_token=user_auth['auth_token'],

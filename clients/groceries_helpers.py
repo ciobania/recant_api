@@ -38,6 +38,7 @@ class GroceriesHelpers:
                                'post',
                                auth_token=auth_token,
                                payload=payload)
+        print(f'created_grocery_list:: {data}')
 
         return data
 

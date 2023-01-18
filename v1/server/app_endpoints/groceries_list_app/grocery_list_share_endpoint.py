@@ -22,15 +22,17 @@ class GroceryListShareEndpoint(MethodView):
         :return: JSON API response
         """
         request_payload = request.get_json()
+        print(f'{request_payload=}')
         email = request_payload.get('email')
         grocery_list_id = request_payload.get('grocery_list_id')
-        user = User.query.filter_by(email=email).first()
-        if not user:
+        print(f'filtering by grocery_list_id:: {grocery_list_id}')
+        user_to_share_with = User.query.filter_by(email=email).first()
+        if not user_to_share_with:
             # TODO: throw error
             pass
         else:
             grocery_list = GroceriesList.query.filter_by(id=grocery_list_id).first()
-            sgl = SharedGroceriesList(user_id=user.id, grocery_list_id=grocery_list.id, owner=False)
+            sgl = SharedGroceriesList(user_id=user_to_share_with.id, grocery_list_id=grocery_list.id)
             sgl.save()
             response_message = f'Grocery List {grocery_list_id} was shared with user {email}.'
             response_object = {'status': 'success',
@@ -48,8 +50,7 @@ class GroceryListShareEndpoint(MethodView):
         email = request_payload.get('email')
 
         user = SharedGroceriesList.user.has(email=email)
-        filter_gl = GroceriesList.shared_with.any(grocery_list_id=grocery_list_id,
-                                                  owner=False)
+        filter_gl = GroceriesList.shared_with.any(grocery_list_id=grocery_list_id)
         grocery_list = GroceriesList.query.filter(filter_gl, user)
         grocery_list.delete(synchronize_session=False)
         response_object = {'status': 'success',

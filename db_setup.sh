@@ -17,25 +17,25 @@ for DB_SUFFIX in "${DB_SUFFIXES[@]}"; do
   DB_NAME="flask_jwt_auth${DB_SUFFIX}"
 
   echo "Drop DB:: ${DB_NAME}"
-  psql -h 192.168.1.137 -p 54320 -U es_user -w eventstore -c "drop database ${DB_NAME};"
+  psql -h ${HOST_IP} -p 54320 -U es_user -w eventstore -c "drop database ${DB_NAME};"
 
   echo "Create DB:: ${DB_NAME}"
-  psql -h 192.168.1.137 -p 54320 -U es_user -w eventstore -c "create database ${DB_NAME};"
+  psql -h ${HOST_IP} -p 54320 -U es_user -w eventstore -c "create database ${DB_NAME};"
 
 #  echo "Grant CONNECT permissions on DB:: ${DB_NAME}"
-#  psql -h 192.168.1.137 -p 54320 -U es_user -w eventstore -c "GRANT CONNECT ON DATABASE ${DB_NAME} TO es_user;"
+#  psql -h ${HOST_IP} -p 54320 -U es_user -w eventstore -c "GRANT CONNECT ON DATABASE ${DB_NAME} TO es_user;"
 #
 #  echo "Grant USAGE permissions on public schema:: ${DB_NAME}"
-#  psql -h 192.168.1.137 -p 54320 -U es_user -w eventstore -c "GRANT USAGE ON SCHEMA public TO es_user;"
+#  psql -h ${HOST_IP} -p 54320 -U es_user -w eventstore -c "GRANT USAGE ON SCHEMA public TO es_user;"
   echo "Grant ALL privileges to DB:: ${DB_NAME}"
-  psql -h 192.168.1.137 -p 54320 -U es_user -w eventstore -c "grant all privileges on DATABASE ${DB_NAME} TO es_user;"
+  psql -h ${HOST_IP} -p 54320 -U es_user -w eventstore -c "grant all privileges on DATABASE ${DB_NAME} TO es_user;"
 done
 
-#psql -h 192.168.1.137 -p 54320 -U es_user -w eventstore -c "drop database flask_jwt_auth_test;"
-#psql -h 192.168.1.137 -p 54320 -U es_user -w eventstore -c "create database flask_jwt_auth_test;"
+#psql -h ${HOST_IP} -p 54320 -U es_user -w eventstore -c "drop database flask_jwt_auth_test;"
+#psql -h ${HOST_IP} -p 54320 -U es_user -w eventstore -c "create database flask_jwt_auth_test;"
 #
-#psql -h 192.168.1.137 -p 54320 -U es_user -w flask_jwt_auth_test -c "delete from alembic_version;"
-#psql -h 192.168.1.137 -p 54320 -U es_user -w flask_jwt_auth_test -c "\c flask_jwt_auth"
+#psql -h ${HOST_IP} -p 54320 -U es_user -w flask_jwt_auth_test -c "delete from alembic_version;"
+#psql -h ${HOST_IP} -p 54320 -U es_user -w flask_jwt_auth_test -c "\c flask_jwt_auth"
 
 # old_migrate via manage.py
 # python3 manage.py create_db

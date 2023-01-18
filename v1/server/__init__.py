@@ -24,12 +24,20 @@ db_mongo = MongoEngine(app)
 from flask_jwt_auth.v1.server.models import Role, User
 from flask_jwt_auth.v1.server.auth.views import auth_bp
 from flask_jwt_auth.v1.server.app_endpoints.groceries_list_app.views import groceries_list_bp
-from flask_jwt_auth.v1.server.app_endpoints.calendar_todos_app.views import todos_calendar_bp
+# from flask_jwt_auth.v1.server.app_endpoints.calendar_todos_app.views import todos_calendar_bp
+from flask_jwt_auth.v1.server.app_endpoints.products_app.products_endpoint import products_bp
+from flask_jwt_auth.v1.server.app_endpoints.products_app.product_categories_endpoint import product_categories_bp
+from flask_jwt_auth.v1.server.app_endpoints.products_app.products_search_endpoint.views import products_search_bp
+
+
 
 user_datastore = SQLAlchemySessionUserDatastore(db_sql.session,
                                                 User, Role)
 security = Security(app, user_datastore)
 
 app.register_blueprint(auth_bp)
+app.register_blueprint(products_bp)
+app.register_blueprint(product_categories_bp)
+app.register_blueprint(products_search_bp)
 app.register_blueprint(groceries_list_bp)
-app.register_blueprint(todos_calendar_bp)
+# app.register_blueprint(todos_calendar_bp)

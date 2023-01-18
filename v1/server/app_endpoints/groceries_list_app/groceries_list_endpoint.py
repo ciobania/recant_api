@@ -7,6 +7,7 @@ from flask.views import MethodView
 
 from flask_jwt_auth.v1.server.auth.auth_helpers import login_required
 from flask_jwt_auth.v1.server.models import GroceriesList
+from flask_jwt_auth.v1.server.models.groceries_list_model import SharedGroceriesList
 
 
 class GroceriesListEndpoint(MethodView):
@@ -29,9 +30,10 @@ class GroceriesListEndpoint(MethodView):
                                    'message': err_msg.format(_)}
                 return make_response(jsonify(response_object)), 401
         else:
-            filter_gl = GroceriesList.shared_with.any(user_id=g.user.id)
-            groceries_list = GroceriesList.query.filter(filter_gl).order_by(GroceriesList.created_at).all()
-            gls = [item.as_dict() for item in groceries_list if groceries_list]
+            print(f'searching for gls with:: {g.user.id}')
+            groceries_list = GroceriesList.query.filter_by(user_id=g.user.id).order_by(GroceriesList.created_at).all()
+            gls = [item.as_dict() for item in groceries_list]
+
             response_object = {'status': 'success',
                                'data': gls}
             return make_response(jsonify(response_object)), 200
@@ -46,8 +48,9 @@ class GroceriesListEndpoint(MethodView):
         if not grocery_list_id:
             add_grocery_list = {'name': request_payload.get('name'),
                                 'description': request_payload.get('description')}
-            new_grocery_list = GroceriesList(**add_grocery_list, user=g.user).as_dict()
-
+            new_grocery_list = GroceriesList(**add_grocery_list, user_id=g.user.id).as_dict()
+            # sgl = SharedGroceriesList(user_id=g.user.id, grocery_list_id=new_grocery_list['id'])
+            # sgl.save()
             response_object = {'status': 'success',
                                'data': new_grocery_list}
             return make_response(jsonify(response_object)), 200
@@ -76,7 +79,7 @@ class GroceriesListEndpoint(MethodView):
         if grocery_list_id:
             response_object = {'status': 'success',
                                'message': 'Grocery List with id: {} was deleted.'.format(grocery_list_id)}
-            filter_gl = GroceriesList.shared_with.any(user_id=g.user.id, grocery_list_id=grocery_list_id, owner=True)
+            filter_gl = GroceriesList.shared_with.any(user_id=g.user.id, grocery_list_id=grocery_list_id)
             grocery_list = GroceriesList.query.filter(filter_gl)
             if not grocery_list:
                 response_object = {'status': 'fail',

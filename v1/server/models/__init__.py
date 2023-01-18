@@ -6,8 +6,7 @@
 from .base_model import BaseModel
 from .roles_model import user_roles, Role
 from .users_model import User, BlacklistToken
-from .groceries_list_model import GroceriesList
-from .groceries_list_model import GroceriesListItem
-from .todos_list_model import TodoList, TodoItem, todo_list_users
+from .groceries_list_model import GroceriesList, GroceriesListItem
+# from .todos_list_model import TodoList, TodoListItem, TodoListUsers
 from .products_model import Product
-
+from .product_categories_model import ProductCategory

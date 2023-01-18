@@ -49,4 +49,4 @@ class RequestHelpers:
             return data
         else:
             err_msg = 'Response type is: {}.\nExpected type is {}.\n'
-            raise NotImplementedError(err_msg.format(type(response), response_type))
+            # raise NotImplementedError(err_msg.format(type(response), response_type))

@@ -4,9 +4,12 @@
 # author: 'ACIOBANI'
 from datetime import datetime
 from uuid import uuid4
+from uuid import UUID
+
+import sqlalchemy
 from sqlalchemy import func
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.dialects.postgresql import UUID as SQL_DIALECT_UUID
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from flask_jwt_auth.v1.server import db_sql
 
@@ -18,7 +21,7 @@ class BaseModel(db_sql.Model):
     __abstract__ = True
     __table_args__ = {'extend_existing': True}
 
-    id = db_sql.Column('id', UUID(as_uuid=True), primary_key=True, default=uuid4, nullable=False)
+    id = db_sql.Column('id', SQL_DIALECT_UUID(as_uuid=True), primary_key=True, default=uuid4, nullable=False)
     created_at = db_sql.Column(db_sql.DateTime, nullable=False, server_default=func.now())
     updated_at = db_sql.Column(db_sql.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
     deleted_at = db_sql.Column(db_sql.DateTime, nullable=True, onupdate=datetime.utcnow)
@@ -37,12 +40,15 @@ class BaseModel(db_sql.Model):
             db_sql.session.commit()
         except IntegrityError as _:
             db_sql.session.rollback()
+            db_sql.session.commit()
             self_params = {param: param_value for param, param_value in self.as_dict().items() if param_value}
             try:
                 self.__dict__ = dict(db_sql.session.query(self.__table__).filter_by(**self_params).first())
             except TypeError as _:
-                print(f'{self_params=}')
-                print(f'{self.__table__=}')
+                existing = db_sql.session.query(self.__table__).filter_by(**self_params).first()
+                print(f'Existing_record for:: {existing}\n and {self_params=}')
+        except (AttributeError, sqlalchemy.orm.exc.UnmappedInstanceError, sqlalchemy.exc.NoInspectionAvailable) as _:
+            print(f'Could not add {self}')
 
     def delete(self):
         db_sql.session.delete(self)

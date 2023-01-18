@@ -30,7 +30,7 @@ class User(BaseModel, UserMixin):
                                 backref=db_sql.backref('users', lazy='joined'))
     SALT = app.config.get('SECRET_KEY').encode()
 
-    def __init__(self, email, password, username=None, is_admin=False, roles=('basic',)):
+    def __init__(self, email, password, username=None, is_admin=False, roles=('normal_user',)):
         super().__init__()
         self.email = email
         self.password = self.generate_password_hash(password)
